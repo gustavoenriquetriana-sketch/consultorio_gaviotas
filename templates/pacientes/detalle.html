@@ -1,0 +1,199 @@
+{% extends 'base.html' %}
+
+{% block title %}Las Gaviotas - Ficha de {{ paciente.nombres }} {{ paciente.apellidos }}{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 20px;">
+    <a href="{% url 'buscar_pacientes' %}" class="btn" style="background-color: #95a5a6; width: auto; display: inline-block;"><i class="bi bi-arrow-left"></i> Volver a Búsqueda</a>
+</div>
+
+<div class="patient-details-grid">
+    <!-- Columna Izquierda: Datos Personales del Paciente -->
+    <div class="info-card">
+        <h3>Datos del Paciente</h3>
+
+        <div class="detail-row">
+            <strong>Cédula de Identidad</strong>
+            <span>{{ paciente.cedula }}</span>
+        </div>
+
+        <div class="detail-row">
+            <strong>Nombre Completo</strong>
+            <span>{{ paciente.nombres }} {{ paciente.apellidos }}</span>
+        </div>
+
+        <div class="detail-row">
+            <strong>Fecha de Nacimiento</strong>
+            <span>{{ paciente.fecha_nacimiento|date:"d/m/Y" }}</span>
+        </div>
+
+        <div class="detail-row">
+            <strong>Sexo Biológico</strong>
+            <span>{{ paciente.get_sexo_display }}</span>
+        </div>
+
+        <div class="detail-row">
+            <strong>Teléfono</strong>
+            <span>{{ paciente.telefono }}</span>
+        </div>
+
+        <div class="detail-row">
+            <strong>Correo Electrónico</strong>
+            <span>{{ paciente.correo_electronico|default:"No registrado" }}</span>
+        </div>
+
+        <div class="detail-row">
+            <strong>Dirección de Habitación</strong>
+            <span>{{ paciente.direccion }}</span>
+        </div>
+
+        {% if paciente.contacto_emergencia_nombre %}
+        <div class="detail-row" style="background-color: #f8fafc; padding: 10px; border-radius: 6px;">
+            <strong>Contacto de Emergencia</strong>
+            <span>{{ paciente.contacto_emergencia_nombre }} ({% if paciente.contacto_emergencia_telefono %}{{ paciente.contacto_emergencia_telefono }}{% else %}Sin teléfono{% endif %})</span>
+        </div>
+        {% endif %}
+        
+        <div style="margin-top: 25px; display: flex; flex-direction: column; gap: 10px;">
+            {% if request.user.rol == 'ADMINISTRADOR' or request.user.rol == 'RECEPCIONISTA' %}
+                <a href="{% url 'editar_paciente' paciente.pk %}" class="btn" style="background-color: #0077b6; font-size: 0.9rem;"><i class="bi bi-pencil-fill" style="margin-right: 5px;"></i> Editar Datos</a>
+            {% endif %}
+            {% if request.user.rol == 'ADMINISTRADOR' and paciente.activo %}
+                <a href="{% url 'desactivar_paciente' paciente.pk %}" class="btn" style="background-color: #c0392b; font-size: 0.9rem;"><i class="bi bi-person-x-fill" style="margin-right: 5px;"></i> Desactivar Paciente</a>
+            {% endif %}
+            {% if not paciente.activo %}
+                <div style="background-color: #fadbd8; color: #c0392b; text-align: center; padding: 10px; border-radius: 6px; font-weight: bold; font-size: 0.9rem;">
+                    <i class="bi bi-exclamation-octagon-fill" style="margin-right: 5px;"></i> Paciente Desactivado
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Columna Derecha: Historial Clínico Centralizado y Recetas -->
+    <div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 15px;">
+            <h3 style="color: #084c61; margin-bottom: 0;">Historial Clínico Centralizado</h3>
+            {% if request.user.rol != 'RECEPCIONISTA' %}
+                <a href="{% url 'registrar_consulta' paciente.pk %}" class="btn btn-secondary" style="width: auto; font-weight: 600;"><i class="bi bi-file-earmark-plus" style="margin-right: 5px;"></i> Registrar Consulta</a>
+            {% endif %}
+        </div>
+
+        {% if historias %}
+            {% for historia in historias %}
+                <div class="history-card">
+                    <div class="history-header">
+                        <h4>Consulta Médica</h4>
+                        <span class="history-date">{{ historia.fecha_consulta|date:"d/m/Y h:i a" }}</span>
+                    </div>
+                    
+                    <p style="margin-bottom: 10px;"><strong>Médico Tratante:</strong> Dr(a). {{ historia.medico.get_full_name|default:historia.medico.username }} {% if historia.medico.especialidad %}({{ historia.medico.especialidad }}){% endif %}</p>
+                    
+                    <div class="history-body">
+                        <p><strong>Motivo de Consulta:</strong> {{ historia.motivo_consulta }}</p>
+                        {% if historia.antecedentes %}
+                            <p><strong>Antecedentes:</strong> {{ historia.antecedentes }}</p>
+                        {% endif %}
+                        <p><strong>Diagnóstico:</strong> {{ historia.diagnostico }}</p>
+                        {% if historia.notas_observaciones %}
+                            <p><strong>Observaciones:</strong> {{ historia.notas_observaciones }}</p>
+                        {% endif %}
+                    </div>
+
+                    <!-- Receta Médica Vinculada a la Consulta -->
+                    {% if historia.receta %}
+                        <div class="receta-section">
+                            <p class="receta-title"><i class="bi bi-capsule-pill" style="color: #008080; margin-right: 5px;"></i> Receta Médica Emitida ({{ historia.receta.fecha_emision|date:"d/m/Y" }})</p>
+                            <p><strong>Medicamentos e Indicaciones:</strong></p>
+                            <p style="white-space: pre-line;">{{ historia.receta.indicaciones_medicamentos }}</p>
+                            {% if historia.receta.observaciones %}
+                                <p style="margin-top: 8px;"><em>Obs: {{ historia.receta.observaciones }}</em></p>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+
+                    <!-- Acciones sobre la Consulta -->
+                    <div style="margin-top: 15px; display: flex; gap: 10px; justify-content: flex-end; border-top: 1px solid #f0f6f8; padding-top: 10px;">
+                        {% if request.user.rol == 'ADMINISTRADOR' or request.user.rol == 'MEDICO' %}
+                            <a href="{% url 'editar_consulta' historia.pk %}" class="btn btn-sm" style="background-color: #0077b6; color: white; width: auto; font-size: 0.8rem;"><i class="bi bi-pencil" style="margin-right: 3px;"></i> Editar Consulta</a>
+                        {% endif %}
+                        {% if request.user.rol == 'ADMINISTRADOR' %}
+                            <a href="{% url 'eliminar_consulta' historia.pk %}" class="btn btn-sm" style="background-color: #c0392b; color: white; width: auto; font-size: 0.8rem;"><i class="bi bi-trash" style="margin-right: 3px;"></i> Eliminar</a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="history-card">
+                <p style="color: #7f8c8d; text-align: center;">Este paciente aún no posee registros en su historial clínico.</p>
+            </div>
+        {% endif %}
+
+        <!-- Sección de Citas Médicas Agendadas -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 35px; margin-bottom: 15px; flex-wrap: wrap; gap: 15px;">
+            <h3 style="color: #084c61; margin-bottom: 0;">Citas Médicas Agendadas</h3>
+            {% if request.user.rol != 'MEDICO' %}
+                <a href="{% url 'agendar_cita' paciente.pk %}" class="btn btn-secondary" style="width: auto; font-weight: 600;"><i class="bi bi-calendar-plus" style="margin-right: 5px;"></i> Agendar Cita</a>
+            {% endif %}
+        </div>
+        
+        {% if citas %}
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Fecha y Hora</th>
+                            <th>Médico</th>
+                            <th>Motivo</th>
+                            <th>Estado</th>
+                            <th style="text-align: center;">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for cita in citas %}
+                            <tr>
+                                <td style="font-weight: 600;">{{ cita.fecha_hora|date:"d/m/Y h:i a" }}</td>
+                                <td>Dr(a). {{ cita.medico.get_full_name|default:cita.medico.username }}</td>
+                                <td>{{ cita.motivo }}</td>
+                                <td>
+                                    <span class="role-badge" style="background-color: {% if cita.estado == 'PENDIENTE' %}#f39c12{% elif cita.estado == 'ATENDIDA' %}#27ae60{% else %}#95a5a6{% endif %}; color: #ffffff;">
+                                        {{ cita.get_estado_display }}
+                                    </span>
+                                </td>
+                                <td style="text-align: center;">
+                                    <div style="display: flex; gap: 5px; justify-content: center; align-items: center; flex-wrap: wrap;">
+                                        {% if cita.estado == 'PENDIENTE' %}
+                                            <a href="{% url 'cambiar_estado_cita' cita.pk 'ATENDIDA' %}" class="btn btn-sm btn-secondary" style="background-color: #27ae60; color: white; padding: 4px 8px; font-size: 0.8rem;">
+                                                <i class="bi bi-check-lg"></i> Atendida
+                                            </a>
+                                            <a href="{% url 'cambiar_estado_cita' cita.pk 'CANCELADA' %}" class="btn btn-sm btn-secondary" style="background-color: #c0392b; color: white; padding: 4px 8px; font-size: 0.8rem;">
+                                                <i class="bi bi-x-lg"></i> Cancelar
+                                            </a>
+                                        {% else %}
+                                            <a href="{% url 'cambiar_estado_cita' cita.pk 'PENDIENTE' %}" class="btn btn-sm btn-secondary" style="background-color: #7f8c8d; color: white; padding: 4px 8px; font-size: 0.8rem;">
+                                                <i class="bi bi-arrow-counterclockwise"></i> Re-abrir
+                                            </a>
+                                        {% endif %}
+                                        
+                                        {% if request.user.rol == 'ADMINISTRADOR' or request.user.rol == 'RECEPCIONISTA' %}
+                                            <a href="{% url 'editar_cita' cita.pk %}" class="btn btn-sm" style="background-color: #0077b6; color: white; padding: 4px 8px; font-size: 0.8rem;">
+                                                <i class="bi bi-pencil"></i> Editar
+                                            </a>
+                                            <a href="{% url 'eliminar_cita' cita.pk %}" class="btn btn-sm" style="background-color: #c0392b; color: white; padding: 4px 8px; font-size: 0.8rem;">
+                                                <i class="bi bi-trash"></i> Eliminar
+                                            </a>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="history-card">
+                <p style="color: #7f8c8d; text-align: center;">No hay citas registradas para este paciente.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

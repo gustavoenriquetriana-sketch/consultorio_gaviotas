@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block title %}Las Gaviotas - Reporte de Consultas{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 20px;">
+    <a href="{% url 'menu_reportes' %}" class="btn" style="background-color: #95a5a6; width: auto; display: inline-block;"><i class="bi bi-arrow-left"></i> Volver al Menú</a>
+</div>
+
+<div class="welcome-section" style="border-left-color: #008080; margin-bottom: 25px;">
+    <span style="font-size: 0.8rem; text-transform: uppercase; color: #7f8c8d; font-weight: bold; letter-spacing: 0.5px;">Reporte Clínico</span>
+    <h2 style="margin-top: 5px; margin-bottom: 5px; color: #008080;">Historial de Consultas Médicas</h2>
+    <p>Consulte la carga y el historial de atenciones clínicas en el consultorio. Rango de fechas obligatorio.</p>
+</div>
+
+<!-- Formulario de Filtros -->
+<div class="search-card" style="margin-bottom: 30px;">
+    <form method="get" action="{% url 'reporte_consultas' %}">
+        <input type="hidden" name="filtrar" value="1">
+        
+        <div class="search-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+            <div class="form-group">
+                <label for="id_fecha_inicio">Desde la Fecha: *</label>
+                <input type="date" name="fecha_inicio" id="id_fecha_inicio" class="form-control" value="{{ fecha_inicio_filtro }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="id_fecha_fin">Hasta la Fecha: *</label>
+                <input type="date" name="fecha_fin" id="id_fecha_fin" class="form-control" value="{{ fecha_fin_filtro }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="id_medico">Médico Tratante:</label>
+                <select name="medico" id="id_medico" class="form-control">
+                    <option value="">-- Todos los Médicos --</option>
+                    {% for m in medicos %}
+                        <option value="{{ m.pk }}" {% if medico_filtro == m.pk|stringformat:"s" %}selected{% endif %}>
+                            Dr(a). {{ m.get_full_name|default:m.username }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <div class="search-actions" style="margin-top: 20px;">
+            <button type="submit" class="btn btn-secondary" style="width: auto;">
+                <i class="bi bi-funnel-fill" style="margin-right: 5px;"></i> Filtrar y Previsualizar
+            </button>
+            
+            {% if rango_valido %}
+                <a href="{% url 'reporte_consultas' %}?fecha_inicio={{ fecha_inicio_filtro }}&fecha_fin={{ fecha_fin_filtro }}&medico={{ medico_filtro }}&exportar=pdf" class="btn" style="background-color: #c0392b; width: auto; font-weight: bold;" target="_blank">
+                    <i class="bi bi-file-earmark-pdf-fill" style="margin-right: 5px;"></i> Exportar a PDF
+                </a>
+            {% endif %}
+        </div>
+    </form>
+</div>
+
+<!-- Tabla de Resultados en Pantalla -->
+{% if busqueda_realizada and rango_valido %}
+<div class="table-responsive">
+    <h3>Previsualización del Reporte ({{ consultas|length }} Consultas)</h3>
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 15%;">Fecha</th>
+                <th style="width: 25%;">Paciente</th>
+                <th style="width: 20%;">Médico Tratante</th>
+                <th style="width: 20%;">Motivo de Consulta</th>
+                <th style="width: 20%;">Diagnóstico</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for c in consultas %}
+                <tr>
+                    <td style="font-weight: bold;">{{ c.fecha_consulta|date:"d/m/Y h:i a" }}</td>
+                    <td>
+                        {{ c.paciente.apellidos }}, {{ c.paciente.nombres }}
+                        <br><small style="color: #7f8c8d;">C.I: {{ c.paciente.cedula }}</small>
+                    </td>
+                    <td>Dr(a). {{ c.medico.get_full_name|default:c.medico.username }}</td>
+                    <td>{{ c.motivo_consulta }}</td>
+                    <td>{{ c.diagnostico }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="5" style="text-align: center; padding: 30px; color: #7f8c8d;">
+                        No se registraron consultas médicas en el rango y médico seleccionado.
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}
+{% endblock %}

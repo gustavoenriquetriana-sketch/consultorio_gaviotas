@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+{% block title %}Las Gaviotas - Editar Consulta{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 20px;">
+    <a href="{% url 'detalle_paciente' paciente.pk %}" class="btn" style="background-color: #95a5a6; width: auto; display: inline-block;"><i class="bi bi-arrow-left"></i> Cancelar y Volver</a>
+</div>
+
+<!-- Tarjeta de Ficha Resumen del Paciente (No editable) -->
+<div class="welcome-section" style="border-left-color: #084c61; margin-bottom: 25px;">
+    <span style="font-size: 0.8rem; text-transform: uppercase; color: #7f8c8d; font-weight: bold; letter-spacing: 0.5px;">Paciente en Atención</span>
+    <h2 style="margin-top: 5px; margin-bottom: 5px; color: #084c61;">{{ paciente.nombres }} {{ paciente.apellidos }}</h2>
+    <p><strong>Cédula de Identidad:</strong> {{ paciente.cedula }}</p>
+</div>
+
+<div class="search-card" style="max-width: 900px; margin: 0 auto;">
+    <h2>Editar Consulta Médica</h2>
+    <p style="color: #7f8c8d; margin-bottom: 25px; font-size: 0.95rem;">
+        Modifique los campos correspondientes de la consulta médica e indicaciones farmacéuticas.
+    </p>
+
+    <form method="post" action="{% url 'editar_consulta' consulta.pk %}">
+        {% csrf_token %}
+
+        {% if consulta_form.non_field_errors %}
+            <div class="alert alert-danger">
+                {% for error in consulta_form.non_field_errors %}
+                    {{ error }}
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <!-- SECCIÓN 1: DATOS DE LA CONSULTA -->
+        <h3 style="color: #084c61; border-bottom: 2px solid #f0f6f8; padding-bottom: 5px; margin-bottom: 20px;">1. Datos Clínicos</h3>
+        
+        <div class="form-group">
+            <label for="{{ consulta_form.motivo_consulta.id_for_label }}">Motivo de Consulta *</label>
+            {{ consulta_form.motivo_consulta }}
+            {% if consulta_form.motivo_consulta.errors %}
+                <span style="color: #c0392b; font-size: 0.85rem;">{% for error in consulta_form.motivo_consulta.errors %}{{ error }}{% endfor %}</span>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ consulta_form.antecedentes.id_for_label }}">Antecedentes Médicos (Opcional)</label>
+            {{ consulta_form.antecedentes }}
+            {% if consulta_form.antecedentes.errors %}
+                <span style="color: #c0392b; font-size: 0.85rem;">{% for error in consulta_form.antecedentes.errors %}{{ error }}{% endfor %}</span>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ consulta_form.diagnostico.id_for_label }}">Diagnóstico Médico *</label>
+            {{ consulta_form.diagnostico }}
+            {% if consulta_form.diagnostico.errors %}
+                <span style="color: #c0392b; font-size: 0.85rem;">{% for error in consulta_form.diagnostico.errors %}{{ error }}{% endfor %}</span>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ consulta_form.notas_observaciones.id_for_label }}">Notas u Observaciones Adicionales (Opcional)</label>
+            {{ consulta_form.notas_observaciones }}
+            {% if consulta_form.notas_observaciones.errors %}
+                <span style="color: #c0392b; font-size: 0.85rem;">{% for error in consulta_form.notas_observaciones.errors %}{{ error }}{% endfor %}</span>
+            {% endif %}
+        </div>
+
+
+        <!-- SECCIÓN 2: RECETA MÉDICA (OPCIONAL) -->
+        <div style="background-color: #f9fbfd; border: 1px dashed #06d6a0; border-radius: 12px; padding: 25px; margin-top: 35px; margin-bottom: 25px;">
+            <h3 style="color: #008080; margin-bottom: 5px;">2. Prescripción de Receta Médica (Opcional)</h3>
+            <p style="color: #7f8c8d; font-size: 0.85rem; margin-bottom: 20px;">
+                Modifique esta sección si desea actualizar o añadir recetas médicas. Deje indicaciones en blanco para eliminar la receta asociada.
+            </p>
+
+            <div class="form-group">
+                <label for="{{ receta_form.indicaciones_medicamentos.id_for_label }}">Medicamentos e Indicaciones de Administración</label>
+                {{ receta_form.indicaciones_medicamentos }}
+                {% if receta_form.indicaciones_medicamentos.errors %}
+                    <span style="color: #c0392b; font-size: 0.85rem;">{% for error in receta_form.indicaciones_medicamentos.errors %}{{ error }}{% endfor %}</span>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ receta_form.observaciones.id_for_label }}">Observaciones o Recomendaciones de la Receta</label>
+                {{ receta_form.observaciones }}
+                {% if receta_form.observaciones.errors %}
+                    <span style="color: #c0392b; font-size: 0.85rem;">{% for error in receta_form.observaciones.errors %}{{ error }}{% endfor %}</span>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="search-actions">
+            <button type="submit" class="btn btn-secondary" style="width: auto; padding: 12px 40px; font-weight: 600;"><i class="bi bi-file-earmark-check" style="margin-right: 5px;"></i> Actualizar Consulta</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

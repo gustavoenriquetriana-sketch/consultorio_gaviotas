@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Reporte de Pacientes - Consultorio Las Gaviotas</title>
+    <style>
+        @page {
+            size: letter portrait;
+            margin: 2cm;
+        }
+        body {
+            font-family: Helvetica, Arial, sans-serif;
+            color: #2c3e50;
+            font-size: 10pt;
+        }
+        .header-title {
+            color: #084c61;
+            font-size: 16pt;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .meta-info {
+            margin-bottom: 20px;
+            font-size: 9pt;
+            color: #7f8c8d;
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th {
+            background-color: #084c61;
+            color: #ffffff;
+            font-weight: bold;
+            text-align: left;
+            padding: 8px;
+            font-size: 9pt;
+            border: 1px solid #084c61;
+        }
+        td {
+            padding: 8px;
+            border: 1px solid #bdc3c7;
+            font-size: 9pt;
+        }
+        .badge-inactivo {
+            color: #c0392b;
+            font-weight: bold;
+        }
+        .badge-activo {
+            color: #27ae60;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header-title">Listado de Pacientes Registrados</div>
+    
+    <div class="meta-info">
+        <strong>Filtros aplicados:</strong> 
+        Desde: {% if fecha_inicio %}{{ fecha_inicio }}{% else %}Inicio{% endif %} | 
+        Hasta: {% if fecha_fin %}{{ fecha_fin }}{% else %}Hoy{% endif %} | 
+        Inactivos: {% if incluir_inactivos %}Sí{% else %}No{% endif %}
+        <br>
+        <strong>Generado por:</strong> {{ usuario.get_full_name|default:usuario.username }} ({{ usuario.get_rol_display }})
+        <br>
+        <strong>Fecha de Emisión:</strong> {{ fecha_generacion|date:"d/m/Y h:i a" }}
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 15%;">Cédula</th>
+                <th style="width: 30%;">Nombre Completo</th>
+                <th style="width: 15%;">F. Nacimiento</th>
+                <th style="width: 10%;">Sexo</th>
+                <th style="width: 15%;">Teléfono</th>
+                <th style="width: 15%;">Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in pacientes %}
+                <tr>
+                    <td><strong>{{ p.cedula }}</strong></td>
+                    <td>{{ p.apellidos }}, {{ p.nombres }}</td>
+                    <td>{{ p.fecha_nacimiento|date:"d/m/Y" }}</td>
+                    <td>{{ p.get_sexo_display }}</td>
+                    <td>{{ p.telefono }}</td>
+                    <td>
+                        {% if p.activo %}
+                            <span class="badge-activo">Activo</span>
+                        {% else %}
+                            <span class="badge-inactivo">Inactivo</span>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="6" style="text-align: center; padding: 20px;">
+                        No hay pacientes registrados en este rango de fechas.
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</body>
+</html>

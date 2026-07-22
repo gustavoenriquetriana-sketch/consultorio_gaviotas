@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block title %}Las Gaviotas - Reporte de Citas{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 20px;">
+    <a href="{% url 'menu_reportes' %}" class="btn" style="background-color: #95a5a6; width: auto; display: inline-block;"><i class="bi bi-arrow-left"></i> Volver al Menú</a>
+</div>
+
+<div class="welcome-section" style="border-left-color: #f39c12; margin-bottom: 25px;">
+    <span style="font-size: 0.8rem; text-transform: uppercase; color: #7f8c8d; font-weight: bold; letter-spacing: 0.5px;">Reporte de Agenda</span>
+    <h2 style="margin-top: 5px; margin-bottom: 5px; color: #e67e22;">Control de Citas Programadas</h2>
+    <p>Consulte y filtre las citas médicas registradas en la agenda del consultorio.</p>
+</div>
+
+<!-- Formulario de Filtros -->
+<div class="search-card" style="margin-bottom: 30px;">
+    <form method="get" action="{% url 'reporte_citas' %}">
+        <input type="hidden" name="filtrar" value="1">
+        
+        <div class="search-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+            <div class="form-group">
+                <label for="id_fecha_inicio">Desde la Fecha:</label>
+                <input type="date" name="fecha_inicio" id="id_fecha_inicio" class="form-control" value="{{ fecha_inicio_filtro }}">
+            </div>
+
+            <div class="form-group">
+                <label for="id_fecha_fin">Hasta la Fecha:</label>
+                <input type="date" name="fecha_fin" id="id_fecha_fin" class="form-control" value="{{ fecha_fin_filtro }}">
+            </div>
+
+            <div class="form-group">
+                <label for="id_estado">Estado de la Cita:</label>
+                <select name="estado" id="id_estado" class="form-control">
+                    <option value="">-- Todos los Estados --</option>
+                    {% for code, label in estados %}
+                        <option value="{{ code }}" {% if estado_filtro == code %}selected{% endif %}>
+                            {{ label }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <div class="search-actions" style="margin-top: 20px;">
+            <button type="submit" class="btn btn-secondary" style="width: auto;">
+                <i class="bi bi-funnel-fill" style="margin-right: 5px;"></i> Filtrar y Previsualizar
+            </button>
+            
+            {% if busqueda_realizada or citas %}
+                <a href="{% url 'reporte_citas' %}?fecha_inicio={{ fecha_inicio_filtro }}&fecha_fin={{ fecha_fin_filtro }}&estado={{ estado_filtro }}&exportar=pdf" class="btn" style="background-color: #c0392b; width: auto; font-weight: bold;" target="_blank">
+                    <i class="bi bi-file-earmark-pdf-fill" style="margin-right: 5px;"></i> Exportar a PDF
+                </a>
+            {% endif %}
+        </div>
+    </form>
+</div>
+
+<!-- Tabla de Resultados en Pantalla -->
+{% if busqueda_realizada or citas %}
+<div class="table-responsive">
+    <h3>Previsualización del Reporte ({{ citas|length }} Citas)</h3>
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 15%;">Fecha y Hora</th>
+                <th style="width: 25%;">Paciente</th>
+                <th style="width: 20%;">Médico</th>
+                <th style="width: 25%;">Motivo</th>
+                <th style="width: 15%;">Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for c in citas %}
+                <tr>
+                    <td style="font-weight: bold;">{{ c.fecha_hora|date:"d/m/Y h:i a" }}</td>
+                    <td>
+                        {{ c.paciente.apellidos }}, {{ c.paciente.nombres }}
+                        <br><small style="color: #7f8c8d;">C.I: {{ c.paciente.cedula }}</small>
+                    </td>
+                    <td>Dr(a). {{ c.medico.get_full_name|default:c.medico.username }}</td>
+                    <td>{{ c.motivo }}</td>
+                    <td>
+                        <span class="role-badge" style="background-color: {% if c.estado == 'PENDIENTE' %}#f39c12{% elif c.estado == 'ATENDIDA' %}#27ae60{% else %}#95a5a6{% endif %}; color: white;">
+                            {{ c.get_estado_display }}
+                        </span>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="5" style="text-align: center; padding: 30px; color: #7f8c8d;">
+                        No se encontraron citas en la agenda bajo los criterios seleccionados.
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}
+{% endblock %}

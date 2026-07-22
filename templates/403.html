@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}Las Gaviotas - Acceso Restringido{% endblock %}
+
+{% block content %}
+<div class="login-wrapper">
+    <div class="login-card" style="border-top-color: #c0392b; max-width: 500px; text-align: center;">
+        <i class="bi bi-shield-slash-fill" style="font-size: 4rem; color: #c0392b;"></i>
+        <h2 style="color: #c0392b; margin-top: 10px;">Acceso Denegado</h2>
+        <p class="subtitle" style="margin-bottom: 20px; font-weight: 500;">
+            No tienes los permisos necesarios para acceder a esta sección del sistema.
+        </p>
+
+        <div style="background-color: #fadbd8; border: 1px solid #f5b7b1; padding: 15px; border-radius: 8px; margin-bottom: 25px; text-align: left; font-size: 0.9rem; color: #78281f;">
+            <p><strong>Causa:</strong> Tu rol actual (<strong>{{ user.get_rol_display }}</strong>) no tiene autorización para realizar esta operación clínica o administrativa.</p>
+            <p style="margin-top: 5px;"><small>Si considera que se trata de un error, comuníquese con el Administrador del sistema.</small></p>
+        </div>
+
+        <a href="{% url 'dashboard' %}" class="btn" style="background-color: #084c61; font-weight: 600;">Volver al Inicio</a>
+    </div>
+</div>
+{% endblock %}

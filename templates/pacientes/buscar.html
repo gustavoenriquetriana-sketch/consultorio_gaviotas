@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block title %}Las Gaviotas - Buscar Pacientes{% endblock %}
+
+{% block content %}
+<div class="search-card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;">
+        <h2 style="margin-bottom: 0;">Búsqueda de Pacientes</h2>
+        {% if request.user.rol != 'MEDICO' %}
+            <a href="{% url 'registrar_paciente' %}" class="btn btn-secondary" style="width: auto; font-weight: 600;"><i class="bi bi-person-plus-fill" style="margin-right: 5px;"></i> Registrar Nuevo Paciente</a>
+        {% endif %}
+    </div>
+    <p style="color: #7f8c8d; margin-bottom: 20px; font-size: 0.95rem;">
+        Complete uno o varios campos para buscar pacientes en el sistema.
+    </p>
+
+    <!-- Formulario de búsqueda con método GET -->
+    <form method="get" action="{% url 'buscar_pacientes' %}">
+        <div class="search-grid">
+            <div class="form-group">
+                <label for="id_nombre">Nombre o Apellido:</label>
+                <input type="text" name="nombre" id="id_nombre" class="form-control" placeholder="Ej: María o Pérez" value="{{ nombre_filtro }}">
+            </div>
+
+            <div class="form-group">
+                <label for="id_cedula">Número de Cédula:</label>
+                <input type="text" name="cedula" id="id_cedula" class="form-control" placeholder="Ej: 12345678" value="{{ cedula_filtro }}">
+            </div>
+
+            <div class="form-group">
+                <label for="id_fecha_nacimiento">Fecha de Nacimiento:</label>
+                <input type="date" name="fecha_nacimiento" id="id_fecha_nacimiento" class="form-control" value="{{ fecha_nacimiento_filtro }}">
+            </div>
+        </div>
+
+        <div style="margin-bottom: 20px; display: flex; align-items: center; gap: 8px;">
+            <input type="checkbox" name="incluir_inactivos" id="id_incluir_inactivos" {% if incluir_inactivos %}checked{% endif %}>
+            <label for="id_incluir_inactivos" style="margin-bottom: 0; font-weight: 600; cursor: pointer; color: #34495e;">Incluir pacientes desactivados (inactivos)</label>
+        </div>
+
+        <div class="search-actions">
+            <a href="{% url 'buscar_pacientes' %}" class="btn" style="background-color: #95a5a6;"><i class="bi bi-x-circle" style="margin-right: 5px;"></i> Limpiar Filtros</a>
+            <button type="submit" class="btn btn-secondary"><i class="bi bi-search" style="margin-right: 5px;"></i> Buscar Paciente</button>
+        </div>
+    </form>
+</div>
+
+<!-- Tabla de Resultados de Búsqueda -->
+<div class="table-responsive">
+    <h3>Resultados de la Búsqueda</h3>
+    {% if pacientes %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Cédula</th>
+                    <th>Apellidos y Nombres</th>
+                    <th>Fecha de Nacimiento</th>
+                    <th>Sexo</th>
+                    <th>Teléfono</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for paciente in pacientes %}
+                    <tr>
+                        <td>
+                            <strong>{{ paciente.cedula }}</strong>
+                            {% if not paciente.activo %}
+                                <span class="role-badge" style="background-color: #e74c3c; color: white;">Inactivo</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ paciente.apellidos }}, {{ paciente.nombres }}</td>
+                        <td>{{ paciente.fecha_nacimiento|date:"d/m/Y" }}</td>
+                        <td>{{ paciente.get_sexo_display }}</td>
+                        <td>{{ paciente.telefono }}</td>
+                        <td>
+                            <a href="{% url 'detalle_paciente' paciente.pk %}" class="btn btn-sm btn-secondary"><i class="bi bi-file-earmark-medical" style="margin-right: 3px;"></i> Ver Ficha Médica</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div style="padding: 30px; color: #7f8c8d; text-align: center;">
+            {% if busqueda_realizada %}
+                <p>No se encontraron pacientes que coincidan con los criterios de búsqueda introducidos.</p>
+                {% if request.user.rol != 'MEDICO' %}
+                    <br>
+                    <a href="{% url 'registrar_paciente' %}" class="btn btn-secondary" style="width: auto; display: inline-block;"><i class="bi bi-person-plus-fill" style="margin-right: 5px;"></i> Registrar Nuevo Paciente</a>
+                {% endif %}
+            {% else %}
+                <p>No hay pacientes registrados en el sistema actualmente.</p>
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

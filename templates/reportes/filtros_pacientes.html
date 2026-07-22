@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block title %}Las Gaviotas - Reporte de Pacientes{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 20px;">
+    <a href="{% url 'menu_reportes' %}" class="btn" style="background-color: #95a5a6; width: auto; display: inline-block;"><i class="bi bi-arrow-left"></i> Volver al Menú</a>
+</div>
+
+<div class="welcome-section" style="border-left-color: #0077b6; margin-bottom: 25px;">
+    <span style="font-size: 0.8rem; text-transform: uppercase; color: #7f8c8d; font-weight: bold; letter-spacing: 0.5px;">Reporte Demográfico</span>
+    <h2 style="margin-top: 5px; margin-bottom: 5px; color: #0077b6;">Listado de Pacientes Registrados</h2>
+    <p>Consulte y filtre el padrón de pacientes registrados en el sistema del consultorio.</p>
+</div>
+
+<!-- Formulario de Filtros -->
+<div class="search-card" style="margin-bottom: 30px;">
+    <form method="get" action="{% url 'reporte_pacientes' %}">
+        <input type="hidden" name="filtrar" value="1">
+        
+        <div class="search-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
+            <div class="form-group">
+                <label for="id_fecha_inicio">Registrados Desde:</label>
+                <input type="date" name="fecha_inicio" id="id_fecha_inicio" class="form-control" value="{{ fecha_inicio_filtro }}">
+            </div>
+
+            <div class="form-group">
+                <label for="id_fecha_fin">Registrados Hasta:</label>
+                <input type="date" name="fecha_fin" id="id_fecha_fin" class="form-control" value="{{ fecha_fin_filtro }}">
+            </div>
+            
+            <div class="form-group" style="display: flex; align-items: center; gap: 8px; margin-top: 30px;">
+                <input type="checkbox" name="incluir_inactivos" id="id_incluir_inactivos" {% if incluir_inactivos %}checked{% endif %}>
+                <label for="id_incluir_inactivos" style="margin-bottom: 0; font-weight: 600; cursor: pointer; color: #34495e;">Incluir inactivos (desactivados)</label>
+            </div>
+        </div>
+
+        <div class="search-actions" style="margin-top: 20px;">
+            <button type="submit" class="btn btn-secondary" style="width: auto;">
+                <i class="bi bi-funnel-fill" style="margin-right: 5px;"></i> Filtrar y Previsualizar
+            </button>
+            
+            {% if busqueda_realizada or pacientes %}
+                <a href="{% url 'reporte_pacientes' %}?fecha_inicio={{ fecha_inicio_filtro }}&fecha_fin={{ fecha_fin_filtro }}{% if incluir_inactivos %}&incluir_inactivos=on{% endif %}&exportar=pdf" class="btn" style="background-color: #c0392b; width: auto; font-weight: bold;" target="_blank">
+                    <i class="bi bi-file-earmark-pdf-fill" style="margin-right: 5px;"></i> Exportar a PDF
+                </a>
+            {% endif %}
+        </div>
+    </form>
+</div>
+
+<!-- Tabla de Resultados en Pantalla -->
+{% if busqueda_realizada or pacientes %}
+<div class="table-responsive">
+    <h3>Previsualización del Reporte ({{ pacientes|length }} Pacientes)</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Cédula</th>
+                <th>Nombre Completo</th>
+                <th>Fecha de Nacimiento</th>
+                <th>Sexo</th>
+                <th>Teléfono</th>
+                <th>Fecha de Registro</th>
+                <th>Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in pacientes %}
+                <tr>
+                    <td><strong>{{ p.cedula }}</strong></td>
+                    <td>{{ p.apellidos }}, {{ p.nombres }}</td>
+                    <td>{{ p.fecha_nacimiento|date:"d/m/Y" }}</td>
+                    <td>{{ p.get_sexo_display }}</td>
+                    <td>{{ p.telefono }}</td>
+                    <td>{{ p.fecha_registro|date:"d/m/Y h:i a" }}</td>
+                    <td>
+                        {% if p.activo %}
+                            <span class="role-badge" style="background-color: #27ae60; color: white;">Activo</span>
+                        {% else %}
+                            <span class="role-badge" style="background-color: #c0392b; color: white;">Inactivo</span>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="7" style="text-align: center; padding: 30px; color: #7f8c8d;">
+                        No se encontraron pacientes registrados bajo los filtros seleccionados.
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}
+{% endblock %}

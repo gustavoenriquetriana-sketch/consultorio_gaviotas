@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}Las Gaviotas - Reportes{% endblock %}
+
+{% block content %}
+<div class="welcome-section">
+    <span style="font-size: 0.8rem; text-transform: uppercase; color: #7f8c8d; font-weight: bold; letter-spacing: 0.5px;">Panel Administrativo</span>
+    <h2 style="margin-top: 5px; margin-bottom: 5px;">Reportes y Estadísticas de Gestión</h2>
+    <p>Consulte y exporte reportes en formato PDF con filtros personalizados para el control clínico e institucional.</p>
+</div>
+
+<!-- Grid de Opciones de Reporte -->
+<div class="dashboard-grid" style="margin-top: 20px;">
+    
+    <!-- Tarjeta 1: Reporte de Pacientes -->
+    <div class="dashboard-card">
+        <div>
+            <h3><i class="bi bi-people-fill"></i> Pacientes Registrados</h3>
+            <p>
+                Permite generar el listado de pacientes del consultorio filtrado por rango de fecha de registro, incluyendo u omitiendo a los pacientes desactivados.
+            </p>
+        </div>
+        <a href="{% url 'reporte_pacientes' %}" class="btn">
+            Configurar Reporte <i class="bi bi-arrow-right"></i>
+        </a>
+    </div>
+
+    <!-- Tarjeta 2: Reporte de Consultas Médicas -->
+    <div class="dashboard-card">
+        <div>
+            <h3><i class="bi bi-heart-pulse-fill"></i> Historial de Consultas</h3>
+            <p>
+                Genera un listado cronológico de las consultas clínicas atendidas por el personal médico del consultorio durante un rango de fechas obligatorio.
+            </p>
+        </div>
+        <a href="{% url 'reporte_consultas' %}" class="btn">
+            Configurar Reporte <i class="bi bi-arrow-right"></i>
+        </a>
+    </div>
+
+    <!-- Tarjeta 3: Reporte de Citas Médicas -->
+    <div class="dashboard-card">
+        <div>
+            <h3><i class="bi bi-calendar3"></i> Control de Citas</h3>
+            <p>
+                Muestra un listado detallado de las citas de la agenda clínica, filtrando según su estado actual (Pendiente, Atendida o Cancelada) y rango de fechas.
+            </p>
+        </div>
+        <a href="{% url 'reporte_citas' %}" class="btn">
+            Configurar Reporte <i class="bi bi-arrow-right"></i>
+        </a>
+    </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+
+{% block title %}Las Gaviotas - Bitácora de Actividades{% endblock %}
+
+{% block content %}
+<div class="welcome-section"
+    style="border-left-color: #f39c12; margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+    <div>
+        <span
+            style="font-size: 0.8rem; text-transform: uppercase; color: #7f8c8d; font-weight: bold; letter-spacing: 0.5px;">Auditoría
+            de Seguridad</span>
+        <h2 style="margin-top: 5px; margin-bottom: 5px; color: #2c3e50;">Bitácora de Actividades</h2>
+        <p>Historial y registro cronológico de las operaciones importantes ejecutadas en el sistema por el personal
+            autorizado.</p>
+    </div>
+    <div>
+        <a href="{% url 'generar_respaldo' %}" class="btn"
+            style="background-color: #084c61; width: auto; font-weight: bold; padding: 12px 25px;">
+            <i class="bi bi-database-fill-down" style="margin-right: 5px;"></i> Generar Respaldo BDD
+        </a>
+    </div>
+</div>
+
+<!-- Filtros de Auditoría -->
+<div class="search-card" style="margin-bottom: 30px;">
+    <form method="get" action="{% url 'listar_logs' %}">
+        <div class="search-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+            <div class="form-group">
+                <label for="id_usuario">Usuario Responsable:</label>
+                <select name="usuario" id="id_usuario" class="form-control">
+                    <option value="">-- Todos los Usuarios --</option>
+                    {% for u in todos_usuarios %}
+                    <option value="{{ u.pk }}" {% if usuario_filtro == u.pk|stringformat:"s" %}selected{% endif %}>
+                        {{ u.get_full_name|default:u.username }} ({{ u.username }})
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="id_accion">Tipo de Acción:</label>
+                <select name="accion" id="id_accion" class="form-control">
+                    <option value="">-- Todas las Acciones --</option>
+                    {% for code, label in acciones %}
+                    <option value="{{ code }}" {% if accion_filtro == code %}selected{% endif %}>
+                        {{ label }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="id_fecha_inicio">Desde la fecha:</label>
+                <input type="date" name="fecha_inicio" id="id_fecha_inicio" class="form-control"
+                    value="{{ fecha_inicio_filtro }}">
+            </div>
+
+            <div class="form-group">
+                <label for="id_fecha_fin">Hasta la fecha:</label>
+                <input type="date" name="fecha_fin" id="id_fecha_fin" class="form-control"
+                    value="{{ fecha_fin_filtro }}">
+            </div>
+        </div>
+
+        <div class="search-actions" style="margin-top: 15px;">
+            <a href="{% url 'listar_logs' %}" class="btn" style="background-color: #95a5a6; width: auto;"><i
+                    class="bi bi-x-circle" style="margin-right: 5px;"></i> Limpiar Filtros</a>
+            <button type="submit" class="btn btn-secondary" style="width: auto;"><i class="bi bi-funnel-fill"
+                    style="margin-right: 5px;"></i> Filtrar Bitácora</button>
+        </div>
+    </form>
+</div>
+
+<!-- Tabla de Registros de Actividad -->
+<div class="table-responsive">
+    <table style="font-size: 0.9rem;">
+        <thead>
+            <tr>
+                <th style="width: 15%;">Fecha y Hora</th>
+                <th style="width: 20%;">Usuario</th>
+                <th style="width: 15%;">Acción</th>
+                <th style="width: 15%;">Módulo Afectado</th>
+                <th style="width: 35%;">Descripción Detallada</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for log in page_obj %}
+            <tr>
+                <td style="font-weight: bold; color: #34495e;">{{ log.fecha_hora|date:"d/m/Y h:i a" }}</td>
+                <td>
+                    {% if log.usuario %}
+                    <strong>{{ log.usuario.get_full_name|default:log.usuario.username }}</strong>
+                    <br><small style="color: #7f8c8d;">@{{ log.usuario.username }} ({{ log.usuario.get_rol_display }})</small>
+                    {% else %}
+                    <span style="color: #95a5a6; font-style: italic;">Sistema / Eliminado</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <span class="action-badge {{ log.accion|lower }}">
+                        {{ log.get_accion_display }}
+                    </span>
+                </td>
+                <td>
+                    <span style="font-weight: 600; color: #084c61;">{{ log.modelo_afectado }}</span>
+                </td>
+                <td style="line-height: 1.4; color: #2c3e50;">{{ log.descripcion }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" style="text-align: center; padding: 40px; color: #7f8c8d;">
+                    No se encontraron registros de actividad en la bitácora bajo los filtros seleccionados.
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Controles de Paginación -->
+{% if page_obj.has_other_pages %}
+<div style="margin-top: 35px; display: flex; justify-content: center; align-items: center; gap: 15px;">
+    {% if page_obj.has_previous %}
+    <a href="?page=1{% if usuario_filtro %}&usuario={{ usuario_filtro }}{% endif %}{% if accion_filtro %}&accion={{ accion_filtro }}{% endif %}{% if fecha_inicio_filtro %}&fecha_inicio={{ fecha_inicio_filtro }}{% endif %}{% if fecha_fin_filtro %}&fecha_fin={{ fecha_fin_filtro }}{% endif %}"
+        class="btn btn-sm btn-secondary" style="width: auto;">&laquo; Primero</a>
+    <a href="?page={{ page_obj.previous_page_number }}{% if usuario_filtro %}&usuario={{ usuario_filtro }}{% endif %}{% if accion_filtro %}&accion={{ accion_filtro }}{% endif %}{% if fecha_inicio_filtro %}&fecha_inicio={{ fecha_inicio_filtro }}{% endif %}{% if fecha_fin_filtro %}&fecha_fin={{ fecha_fin_filtro }}{% endif %}"
+        class="btn btn-sm btn-secondary" style="width: auto;">Anterior</a>
+    {% endif %}
+
+    <span style="font-size: 0.95rem; color: #34495e;">
+        Página <strong>{{ page_obj.number }}</strong> de {{ page_obj.paginator.num_pages }}
+    </span>
+
+    {% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}{% if usuario_filtro %}&usuario={{ usuario_filtro }}{% endif %}{% if accion_filtro %}&accion={{ accion_filtro }}{% endif %}{% if fecha_inicio_filtro %}&fecha_inicio={{ fecha_inicio_filtro }}{% endif %}{% if fecha_fin_filtro %}&fecha_fin={{ fecha_fin_filtro }}{% endif %}"
+        class="btn btn-sm btn-secondary" style="width: auto;">Siguiente</a>
+    <a href="?page={{ page_obj.paginator.num_pages }}{% if usuario_filtro %}&usuario={{ usuario_filtro }}{% endif %}{% if accion_filtro %}&accion={{ accion_filtro }}{% endif %}{% if fecha_inicio_filtro %}&fecha_inicio={{ fecha_inicio_filtro }}{% endif %}{% if fecha_fin_filtro %}&fecha_fin={{ fecha_fin_filtro }}{% endif %}"
+        class="btn btn-sm btn-secondary" style="width: auto;">Último &raquo;</a>
+    {% endif %}
+</div>
+{% endif %}
+{% endblock %}

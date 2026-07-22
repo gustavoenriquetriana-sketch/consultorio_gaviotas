@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+
+{% block title %}Las Gaviotas - Agenda de Citas{% endblock %}
+
+{% block content %}
+<div class="search-card">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 20px;">
+        <h2 style="margin-bottom: 0; color: #084c61;">Agenda General de Citas</h2>
+        <a href="{% url 'buscar_pacientes' %}" class="btn btn-secondary" style="width: auto;"><i class="bi bi-search" style="margin-right: 5px;"></i> Buscar Paciente para Agendar</a>
+    </div>
+    
+    <p style="color: #7f8c8d; margin-bottom: 25px; font-size: 0.95rem;">
+        Consulte y gestione el flujo diario de citas programadas en el consultorio.
+    </p>
+
+    <!-- Filtros de Estado -->
+    <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px;">
+        <a href="{% url 'listar_citas' %}" class="btn" style="width: auto; padding: 8px 16px; background-color: {% if not estado_filtro %}#084c61{% else %}#bdc3c7{% endif %}; color: white; font-size: 0.9rem;">
+            Todas
+        </a>
+        <a href="{% url 'listar_citas' %}?estado=PENDIENTE" class="btn" style="width: auto; padding: 8px 16px; background-color: {% if estado_filtro == 'PENDIENTE' %}#f39c12{% else %}#bdc3c7{% endif %}; color: white; font-size: 0.9rem;">
+            Pendientes
+        </a>
+        <a href="{% url 'listar_citas' %}?estado=ATENDIDA" class="btn" style="width: auto; padding: 8px 16px; background-color: {% if estado_filtro == 'ATENDIDA' %}#27ae60{% else %}#bdc3c7{% endif %}; color: white; font-size: 0.9rem;">
+            Atendidas
+        </a>
+        <a href="{% url 'listar_citas' %}?estado=CANCELADA" class="btn" style="width: auto; padding: 8px 16px; background-color: {% if estado_filtro == 'CANCELADA' %}#c0392b{% else %}#bdc3c7{% endif %}; color: white; font-size: 0.9rem;">
+            Canceladas
+        </a>
+    </div>
+</div>
+
+<!-- Tabla de Listado de Citas -->
+<div class="table-responsive">
+    {% if citas %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Fecha y Hora</th>
+                    <th>Paciente</th>
+                    <th>Médico Tratante</th>
+                    <th>Motivo</th>
+                    <th>Estado</th>
+                    <th style="text-align: center;">Acciones Rápidas</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for cita in citas %}
+                    <tr>
+                        <td style="font-weight: 600; color: #2c3e50;">
+                            {{ cita.fecha_hora|date:"d/m/Y h:i a" }}
+                        </td>
+                        <td>
+                            <a href="{% url 'detalle_paciente' cita.paciente.pk %}" style="color: #0077b6; font-weight: bold; text-decoration: none;">
+                                {{ cita.paciente.apellidos }}, {{ cita.paciente.nombres }}
+                            </a>
+                            <br>
+                            <small style="color: #7f8c8d;">C.I: {{ cita.paciente.cedula }}</small>
+                        </td>
+                        <td>
+                            Dr(a). {{ cita.medico.get_full_name|default:cita.medico.username }}
+                            {% if cita.medico.especialidad %}
+                                <br><small style="color: #7f8c8d;">{{ cita.medico.especialidad }}</small>
+                            {% endif %}
+                        </td>
+                        <td>{{ cita.motivo }}</td>
+                        <td>
+                            <span class="role-badge" style="background-color: {% if cita.estado == 'PENDIENTE' %}#f39c12{% elif cita.estado == 'ATENDIDA' %}#27ae60{% else %}#95a5a6{% endif %}; color: white;">
+                                {{ cita.get_estado_display }}
+                            </span>
+                        </td>
+                        <td style="text-align: center;">
+                            <div style="display: flex; gap: 8px; justify-content: center;">
+                                {% if cita.estado == 'PENDIENTE' %}
+                                    <a href="{% url 'cambiar_estado_cita' cita.pk 'ATENDIDA' %}" class="btn btn-sm btn-secondary" style="background-color: #27ae60; color: white; font-weight: bold;">
+                                        <i class="bi bi-check-lg"></i> Atendida
+                                    </a>
+                                    <a href="{% url 'cambiar_estado_cita' cita.pk 'CANCELADA' %}" class="btn btn-sm btn-secondary" style="background-color: #c0392b; color: white; font-weight: bold;">
+                                        <i class="bi bi-x-lg"></i> Cancelar
+                                    </a>
+                                {% else %}
+                                    <a href="{% url 'cambiar_estado_cita' cita.pk 'PENDIENTE' %}" class="btn btn-sm btn-secondary" style="background-color: #7f8c8d; color: white; font-weight: 500;">
+                                        <i class="bi bi-arrow-counterclockwise"></i> Re-agendar (Pendiente)
+                                    </a>
+                                {% endif %}
+                                {% if request.user.rol == 'ADMINISTRADOR' or request.user.rol == 'RECEPCIONISTA' %}
+                                    <a href="{% url 'editar_cita' cita.pk %}" class="btn btn-sm" style="background-color: #0077b6; color: white; font-weight: 500;">
+                                        <i class="bi bi-pencil"></i> Editar
+                                    </a>
+                                    <a href="{% url 'eliminar_cita' cita.pk %}" class="btn btn-sm" style="background-color: #c0392b; color: white; font-weight: 500;">
+                                        <i class="bi bi-trash"></i> Eliminar
+                                    </a>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p style="padding: 30px; color: #7f8c8d; text-align: center;">
+            No hay citas registradas en la agenda {% if estado_filtro %}con estado <strong>{{ estado_filtro|lower }}</strong>{% endif %}.
+        </p>
+    {% endif %}
+</div>
+{% endblock %}

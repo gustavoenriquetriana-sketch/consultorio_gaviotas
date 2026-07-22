@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block title %}Las Gaviotas - Panel Principal{% endblock %}
+
+{% block content %}
+<div class="welcome-section">
+    <h2>Bienvenido(a), {{ usuario.get_full_name|default:usuario.username }}</h2>
+    <p>Ha ingresado con el rol de <span class="role-badge">{{ rol_nombre }}</span></p>
+    {% if usuario.especialidad %}
+        <p><small>Especialidad: {{ usuario.especialidad }}</small></p>
+    {% endif %}
+</div>
+
+<!-- Fila de Tarjetas de Estadísticas (Premium) -->
+<div class="stat-card-grid">
+    <!-- Tarjeta: Pacientes Registrados -->
+    <div class="stat-card pacientes">
+        <div class="stat-card-info">
+            <span class="stat-card-val">{{ stat_pacientes }}</span>
+            <span class="stat-card-label">Pacientes Activos</span>
+        </div>
+        <div class="stat-card-icon-wrapper">
+            <i class="bi bi-people-fill"></i>
+        </div>
+    </div>
+    
+    <!-- Tarjeta: Citas Pendientes -->
+    <div class="stat-card citas">
+        <div class="stat-card-info">
+            <span class="stat-card-val">{{ stat_citas }}</span>
+            <span class="stat-card-label">Citas Pendientes</span>
+        </div>
+        <div class="stat-card-icon-wrapper">
+            <i class="bi bi-calendar-event"></i>
+        </div>
+    </div>
+    
+    <!-- Tarjeta: Consultas del Mes -->
+    <div class="stat-card consultas">
+        <div class="stat-card-info">
+            <span class="stat-card-val">{{ stat_consultas }}</span>
+            <span class="stat-card-label">Consultas del Mes</span>
+        </div>
+        <div class="stat-card-icon-wrapper">
+            <i class="bi bi-heart-pulse-fill"></i>
+        </div>
+    </div>
+</div>
+
+<!-- Grid Central del Dashboard (Split Layout) -->
+<div class="dashboard-split-grid">
+    <!-- Columna Principal: Citas Programadas para Hoy -->
+    <div class="dashboard-table-card">
+        <h3><i class="bi bi-calendar-check-fill"></i> Citas Médicas Programadas para Hoy</h3>
+        {% if citas_hoy %}
+            <table class="dashboard-table">
+                <thead>
+                    <tr>
+                        <th>Hora</th>
+                        <th>Paciente</th>
+                        <th>Médico Asignado</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for cita in citas_hoy %}
+                        <tr>
+                            <td><strong>{{ cita.fecha_hora|date:"h:i A" }}</strong></td>
+                            <td>{{ cita.paciente.nombres }} {{ cita.paciente.apellidos }}</td>
+                            <td>Dr(a). {{ cita.medico.get_full_name|default:cita.medico.username }}</td>
+                            <td>
+                                <span class="status-badge {{ cita.estado|lower }}">{{ cita.get_estado_display }}</span>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div style="text-align: center; padding: 40px 20px; color: #7f8c8d;">
+                <i class="bi bi-calendar-x" style="font-size: 3rem; display: block; margin-bottom: 15px; color: #cbd5e1;"></i>
+                <p>No hay citas registradas para el día de hoy.</p>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Columna Lateral: Accesos Rápidos -->
+    <div class="dashboard-actions-column">
+        <div class="dashboard-card pacientes">
+            <h3><i class="bi bi-search"></i> Búsqueda</h3>
+            <p>Consulte información personal e historial clínico de pacientes mediante cédula o nombre.</p>
+            <a href="{% url 'buscar_pacientes' %}" class="btn btn-secondary">Ir a Búsqueda</a>
+        </div>
+
+        {% if request.user.rol != 'MEDICO' %}
+        <div class="dashboard-card consultas">
+            <h3><i class="bi bi-person-plus-fill"></i> Registro</h3>
+            <p>Registre nuevos pacientes en el sistema introduciendo su información personal.</p>
+            <a href="{% url 'registrar_paciente' %}" class="btn btn-secondary">Registrar Paciente</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
