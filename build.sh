@@ -6,3 +6,6 @@ pip install -r requirements.txt
 
 python manage.py collectstatic --no-input
 python manage.py migrate
+
+# Crear administrador de forma no interactiva
+python manage.py crear_admin
