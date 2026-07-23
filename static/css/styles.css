@@ -1212,3 +1212,104 @@ footer {
     background-color: rgba(127, 140, 141, 0.08);
     color: #7f8c8d;
 }
+
+/* --- FASE 2: PAGE HEADER, BREADCRUMBS & VALIDACIÓN --- */
+.page-header-banner {
+    background: var(--bg-card);
+    padding: 24px 30px;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-md);
+    margin-bottom: 24px;
+}
+
+.page-header-tag {
+    font-size: var(--font-xs);
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    display: block;
+    margin-bottom: 4px;
+}
+
+.page-header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.page-title {
+    color: var(--color-primary-dark);
+    font-size: var(--font-2xl);
+    font-weight: 800;
+    line-height: 1.2;
+    margin: 0;
+}
+
+.page-subtitle {
+    color: var(--text-secondary);
+    font-size: var(--font-sm);
+    margin-top: 4px;
+    margin-bottom: 0;
+}
+
+.breadcrumb-nav {
+    margin-bottom: 12px;
+}
+
+.breadcrumb-list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    list-style: none;
+    gap: 6px;
+    font-size: var(--font-xs);
+    font-weight: 600;
+    padding: 0;
+    margin: 0;
+}
+
+.breadcrumb-item a {
+    color: var(--color-primary);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.breadcrumb-item a:hover {
+    color: var(--color-primary-dark);
+    text-decoration: underline;
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+    content: "/";
+    margin-right: 6px;
+    color: var(--text-muted);
+    font-weight: 400;
+}
+
+.breadcrumb-item.active {
+    color: var(--text-secondary);
+}
+
+/* Validaciones en Formularios */
+.form-control.is-invalid,
+input.is-invalid,
+select.is-invalid,
+textarea.is-invalid {
+    border-color: var(--color-danger) !important;
+    background-color: var(--color-danger-bg) !important;
+    box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.15) !important;
+}
+
+.error-feedback {
+    color: var(--color-danger);
+    font-size: var(--font-xs);
+    font-weight: 600;
+    margin-top: 6px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}

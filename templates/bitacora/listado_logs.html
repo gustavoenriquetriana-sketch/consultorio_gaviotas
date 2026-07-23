@@ -3,23 +3,8 @@
 {% block title %}Las Gaviotas - Bitácora de Actividades{% endblock %}
 
 {% block content %}
-<div class="welcome-section"
-    style="border-left-color: #f39c12; margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
-    <div>
-        <span
-            style="font-size: 0.8rem; text-transform: uppercase; color: #7f8c8d; font-weight: bold; letter-spacing: 0.5px;">Auditoría
-            de Seguridad</span>
-        <h2 style="margin-top: 5px; margin-bottom: 5px; color: #2c3e50;">Bitácora de Actividades</h2>
-        <p>Historial y registro cronológico de las operaciones importantes ejecutadas en el sistema por el personal
-            autorizado.</p>
-    </div>
-    <div>
-        <a href="{% url 'generar_respaldo' %}" class="btn"
-            style="background-color: #084c61; width: auto; font-weight: bold; padding: 12px 25px;">
-            <i class="bi bi-database-fill-down" style="margin-right: 5px;"></i> Generar Respaldo BDD
-        </a>
-    </div>
-</div>
+{% url 'generar_respaldo' as respaldo_url %}
+{% include 'partials/page_header.html' with title="Bitácora de Actividades" subtitle="Historial y registro cronológico de las operaciones ejecutadas por el personal autorizado." tag="Auditoría de Seguridad" b1_label="Bitácora" action_url=respaldo_url action_label="Generar Respaldo BDD" action_icon="bi bi-database-fill-down" action_class="btn-primary" %}
 
 <!-- Filtros de Auditoría -->
 <div class="search-card" style="margin-bottom: 30px;">

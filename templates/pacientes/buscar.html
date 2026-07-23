@@ -3,16 +3,14 @@
 {% block title %}Las Gaviotas - Buscar Pacientes{% endblock %}
 
 {% block content %}
+{% url 'registrar_paciente' as reg_url %}
+{% if request.user.rol != 'MEDICO' %}
+    {% include 'partials/page_header.html' with title="Búsqueda de Pacientes" subtitle="Complete uno o varios campos para consultar y filtrar pacientes en el sistema." tag="Módulo de Pacientes" b1_label="Pacientes" b2_label="Búsqueda" action_url=reg_url action_label="Registrar Nuevo Paciente" action_icon="bi bi-person-plus-fill" %}
+{% else %}
+    {% include 'partials/page_header.html' with title="Búsqueda de Pacientes" subtitle="Complete uno o varios campos para consultar y filtrar pacientes en el sistema." tag="Módulo de Pacientes" b1_label="Pacientes" b2_label="Búsqueda" %}
+{% endif %}
+
 <div class="search-card">
-    <div class="page-header" style="margin-bottom: 20px;">
-        <h2 style="margin-bottom: 0;">Búsqueda de Pacientes</h2>
-        {% if request.user.rol != 'MEDICO' %}
-            <a href="{% url 'registrar_paciente' %}" class="btn btn-secondary"><i class="bi bi-person-plus-fill"></i> Registrar Nuevo Paciente</a>
-        {% endif %}
-    </div>
-    <p class="subtitle">
-        Complete uno o varios campos para buscar pacientes en el sistema.
-    </p>
 
     <!-- Formulario de búsqueda con método GET -->
     <form method="get" action="{% url 'buscar_pacientes' %}">

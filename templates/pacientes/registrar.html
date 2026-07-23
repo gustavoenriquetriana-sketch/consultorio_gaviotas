@@ -3,23 +3,17 @@
 {% block title %}Las Gaviotas - Registrar Paciente{% endblock %}
 
 {% block content %}
-<div class="page-header">
-    <a href="{% url 'buscar_pacientes' %}" class="btn btn-outline"><i class="bi bi-arrow-left"></i> Volver a Búsqueda</a>
-</div>
+{% url 'buscar_pacientes' as buscar_url %}
+{% include 'partials/page_header.html' with title="Registrar Nuevo Paciente" subtitle="Complete los datos personales y de contacto para dar de alta al paciente." tag="Módulo de Pacientes" b1_label="Pacientes" b1_url=buscar_url b2_label="Registrar" action_url=buscar_url action_label="Volver a Búsqueda" action_icon="bi bi-arrow-left" action_class="btn-outline" %}
 
 <div class="search-card" style="max-width: 800px; margin: 0 auto;">
-    <h2>Registrar Nuevo Paciente</h2>
-    <p class="subtitle">
-        Complete los datos personales y de contacto para dar de alta al paciente en el sistema del consultorio.
-    </p>
-
     <form method="post" action="{% url 'registrar_paciente' %}">
         {% csrf_token %}
 
         {% if form.non_field_errors %}
             <div class="alert alert-danger">
                 {% for error in form.non_field_errors %}
-                    {{ error }}
+                    <i class="bi bi-exclamation-circle-fill"></i> {{ error }}
                 {% endfor %}
             </div>
         {% endif %}
@@ -31,7 +25,7 @@
                 <label for="{{ form.cedula.id_for_label }}">{{ form.cedula.label }} *</label>
                 {{ form.cedula }}
                 {% if form.cedula.errors %}
-                    <span class="error-feedback">{% for error in form.cedula.errors %}{{ error }}{% endfor %}</span>
+                    <span class="error-feedback"><i class="bi bi-exclamation-circle-fill"></i> {% for error in form.cedula.errors %}{{ error }}{% endfor %}</span>
                 {% endif %}
             </div>
 

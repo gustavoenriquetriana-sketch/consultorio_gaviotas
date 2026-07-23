@@ -3,9 +3,8 @@
 {% block title %}Las Gaviotas - Ficha de {{ paciente.nombres }} {{ paciente.apellidos }}{% endblock %}
 
 {% block content %}
-<div class="page-header">
-    <a href="{% url 'buscar_pacientes' %}" class="btn btn-outline"><i class="bi bi-arrow-left"></i> Volver a Búsqueda</a>
-</div>
+{% url 'buscar_pacientes' as buscar_url %}
+{% include 'partials/page_header.html' with title=paciente.nombres|add:" "|add:paciente.apellidos subtitle="Ficha médica centralizada y registros de historial clínico del paciente." tag="Expediente Clínico" b1_label="Pacientes" b1_url=buscar_url b2_label=paciente.nombres action_url=buscar_url action_label="Volver a Búsqueda" action_icon="bi bi-arrow-left" action_class="btn-outline" %}
 
 <div class="patient-details-grid">
     <!-- Columna Izquierda: Datos Personales del Paciente -->

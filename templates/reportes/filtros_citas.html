@@ -3,15 +3,8 @@
 {% block title %}Las Gaviotas - Reporte de Citas{% endblock %}
 
 {% block content %}
-<div style="margin-bottom: 20px;">
-    <a href="{% url 'menu_reportes' %}" class="btn" style="background-color: #95a5a6; width: auto; display: inline-block;"><i class="bi bi-arrow-left"></i> Volver al Menú</a>
-</div>
-
-<div class="welcome-section" style="border-left-color: #f39c12; margin-bottom: 25px;">
-    <span style="font-size: 0.8rem; text-transform: uppercase; color: #7f8c8d; font-weight: bold; letter-spacing: 0.5px;">Reporte de Agenda</span>
-    <h2 style="margin-top: 5px; margin-bottom: 5px; color: #e67e22;">Control de Citas Programadas</h2>
-    <p>Consulte y filtre las citas médicas registradas en la agenda del consultorio.</p>
-</div>
+{% url 'menu_reportes' as reportes_url %}
+{% include 'partials/page_header.html' with title="Control de Citas Programadas" subtitle="Consulte y filtre las citas médicas registradas en la agenda del consultorio." tag="Reportes de Agenda" b1_label="Reportes" b1_url=reportes_url b2_label="Control de Citas" action_url=reportes_url action_label="Volver al Menú" action_icon="bi bi-arrow-left" action_class="btn-outline" %}
 
 <!-- Formulario de Filtros -->
 <div class="search-card" style="margin-bottom: 30px;">

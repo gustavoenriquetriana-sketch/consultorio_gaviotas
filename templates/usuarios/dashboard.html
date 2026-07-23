@@ -3,13 +3,7 @@
 {% block title %}Las Gaviotas - Panel Principal{% endblock %}
 
 {% block content %}
-<div class="welcome-section">
-    <h2>Bienvenido(a), {{ usuario.get_full_name|default:usuario.username }}</h2>
-    <p>Ha ingresado con el rol de <span class="role-badge">{{ rol_nombre }}</span></p>
-    {% if usuario.especialidad %}
-        <p><small>Especialidad: {{ usuario.especialidad }}</small></p>
-    {% endif %}
-</div>
+{% include 'partials/page_header.html' with title="Panel Principal" subtitle="Gestión clínica e indicadores generales del consultorio." tag=rol_nombre %}
 
 <!-- Fila de Tarjetas de Estadísticas (Premium) -->
 <div class="stat-card-grid">

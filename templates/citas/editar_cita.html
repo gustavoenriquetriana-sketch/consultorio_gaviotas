@@ -3,40 +3,27 @@
 {% block title %}Las Gaviotas - Editar Cita{% endblock %}
 
 {% block content %}
-<div style="margin-bottom: 20px;">
-    <a href="{% url 'detalle_paciente' paciente.pk %}" class="btn" style="background-color: #95a5a6; width: auto; display: inline-block;"><i class="bi bi-arrow-left"></i> Cancelar y Volver</a>
-</div>
-
-<!-- Resumen del Paciente (No editable) -->
-<div class="welcome-section" style="border-left-color: #084c61; margin-bottom: 25px;">
-    <span style="font-size: 0.8rem; text-transform: uppercase; color: #7f8c8d; font-weight: bold; letter-spacing: 0.5px;">Paciente en Atención</span>
-    <h2 style="margin-top: 5px; margin-bottom: 5px; color: #084c61;">{{ paciente.nombres }} {{ paciente.apellidos }}</h2>
-    <p><strong>Cédula de Identidad:</strong> {{ paciente.cedula }}</p>
-</div>
+{% url 'listar_citas' as citas_url %}
+{% url 'detalle_paciente' paciente.pk as detalle_url %}
+{% include 'partials/page_header.html' with title="Editar Cita Médica" subtitle="Modificar fecha o detalles de la cita para: "|add:paciente.nombres|add:" "|add:paciente.apellidos tag="Agenda de Citas" b1_label="Citas" b1_url=citas_url b2_label=paciente.nombres b2_url=detalle_url b3_label="Editar Cita" action_url=citas_url action_label="Volver a la Agenda" action_icon="bi bi-arrow-left" action_class="btn-outline" %}
 
 <div class="search-card" style="max-width: 700px; margin: 0 auto;">
-    <h2>Editar Cita Médica</h2>
-    <p style="color: #7f8c8d; margin-bottom: 25px; font-size: 0.95rem;">
-        Modifique la fecha, hora, médico asignado o motivo de la consulta programada.
-    </p>
-
     <form method="post" action="{% url 'editar_cita' cita.pk %}">
         {% csrf_token %}
 
         {% if form.non_field_errors %}
             <div class="alert alert-danger">
                 {% for error in form.non_field_errors %}
-                    {{ error }}
+                    <i class="bi bi-exclamation-circle-fill"></i> {{ error }}
                 {% endfor %}
             </div>
         {% endif %}
 
         <div class="form-group">
             <label for="{{ form.fecha_hora.id_for_label }}">Fecha y Hora de la Cita *</label>
-            <!-- Django template precarga la fecha y hora en input datetime-local si está formateado en YYYY-MM-DDTHH:MM -->
             <input type="datetime-local" name="fecha_hora" id="{{ form.fecha_hora.id_for_label }}" class="form-control" value="{{ form.instance.fecha_hora|date:'Y-m-d\TH:i' }}" required>
             {% if form.fecha_hora.errors %}
-                <span style="color: #c0392b; font-size: 0.85rem;">{% for error in form.fecha_hora.errors %}{{ error }}{% endfor %}</span>
+                <span class="error-feedback"><i class="bi bi-exclamation-circle-fill"></i> {% for error in form.fecha_hora.errors %}{{ error }}{% endfor %}</span>
             {% endif %}
         </div>
 
@@ -44,7 +31,7 @@
             <label for="{{ form.medico.id_for_label }}">Médico Asignado *</label>
             {{ form.medico }}
             {% if form.medico.errors %}
-                <span style="color: #c0392b; font-size: 0.85rem;">{% for error in form.medico.errors %}{{ error }}{% endfor %}</span>
+                <span class="error-feedback"><i class="bi bi-exclamation-circle-fill"></i> {% for error in form.medico.errors %}{{ error }}{% endfor %}</span>
             {% endif %}
         </div>
 
@@ -52,12 +39,12 @@
             <label for="{{ form.motivo.id_for_label }}">Motivo de la Cita *</label>
             {{ form.motivo }}
             {% if form.motivo.errors %}
-                <span style="color: #c0392b; font-size: 0.85rem;">{% for error in form.motivo.errors %}{{ error }}{% endfor %}</span>
+                <span class="error-feedback"><i class="bi bi-exclamation-circle-fill"></i> {% for error in form.motivo.errors %}{{ error }}{% endfor %}</span>
             {% endif %}
         </div>
 
         <div class="search-actions" style="margin-top: 30px;">
-            <button type="submit" class="btn btn-secondary" style="width: auto; padding: 12px 40px; font-weight: 600;"><i class="bi bi-calendar-check" style="margin-right: 5px;"></i> Actualizar Cita</button>
+            <button type="submit" class="btn btn-secondary"><i class="bi bi-calendar-check"></i> Actualizar Cita</button>
         </div>
     </form>
 </div>

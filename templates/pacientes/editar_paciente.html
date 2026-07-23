@@ -3,15 +3,11 @@
 {% block title %}Las Gaviotas - Editar Paciente{% endblock %}
 
 {% block content %}
-<div class="page-header">
-    <a href="{% url 'detalle_paciente' paciente.pk %}" class="btn btn-outline"><i class="bi bi-arrow-left"></i> Cancelar y Volver</a>
-</div>
+{% url 'buscar_pacientes' as buscar_url %}
+{% url 'detalle_paciente' paciente.pk as detalle_url %}
+{% include 'partials/page_header.html' with title="Editar Información del Paciente" subtitle="Modifique los datos personales y de contacto registrados para este paciente." tag="Módulo de Pacientes" b1_label="Pacientes" b1_url=buscar_url b2_label=paciente.nombres b2_url=detalle_url b3_label="Editar" action_url=detalle_url action_label="Cancelar y Volver" action_icon="bi bi-arrow-left" action_class="btn-outline" %}
 
 <div class="search-card" style="max-width: 800px; margin: 0 auto;">
-    <h2>Editar Información de Paciente</h2>
-    <p class="subtitle">
-        Modifique los campos correspondientes para actualizar la información del paciente.
-    </p>
 
     <form method="post" action="{% url 'editar_paciente' paciente.pk %}">
         {% csrf_token %}

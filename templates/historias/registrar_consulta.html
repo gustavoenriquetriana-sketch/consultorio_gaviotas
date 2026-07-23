@@ -3,42 +3,30 @@
 {% block title %}Las Gaviotas - Nueva Consulta{% endblock %}
 
 {% block content %}
-<div style="margin-bottom: 20px;">
-    <a href="{% url 'detalle_paciente' paciente.pk %}" class="btn" style="background-color: #95a5a6; width: auto; display: inline-block;"><i class="bi bi-arrow-left"></i> Volver a Ficha Médica</a>
-</div>
-
-<!-- Tarjeta de Ficha Resumen del Paciente (No editable) -->
-<div class="welcome-section" style="border-left-color: #084c61; margin-bottom: 25px;">
-    <span style="font-size: 0.8rem; text-transform: uppercase; color: #7f8c8d; font-weight: bold; letter-spacing: 0.5px;">Paciente en Atención</span>
-    <h2 style="margin-top: 5px; margin-bottom: 5px; color: #084c61;">{{ paciente.nombres }} {{ paciente.apellidos }}</h2>
-    <p><strong>Cédula de Identidad:</strong> {{ paciente.cedula }} | <strong>Edad:</strong> {{ paciente.fecha_nacimiento|timesince }}</p>
-</div>
+{% url 'buscar_pacientes' as buscar_url %}
+{% url 'detalle_paciente' paciente.pk as detalle_url %}
+{% include 'partials/page_header.html' with title="Registrar Consulta Médica" subtitle="Atención para el paciente: "|add:paciente.nombres|add:" "|add:paciente.apellidos|add:" (C.I: "|add:paciente.cedula|add:")" tag="Atención Médica" b1_label="Pacientes" b1_url=buscar_url b2_label=paciente.nombres b2_url=detalle_url b3_label="Registrar Consulta" action_url=detalle_url action_label="Volver a Ficha" action_icon="bi bi-arrow-left" action_class="btn-outline" %}
 
 <div class="search-card" style="max-width: 900px; margin: 0 auto;">
-    <h2>Nueva Consulta Médica</h2>
-    <p style="color: #7f8c8d; margin-bottom: 25px; font-size: 0.95rem;">
-        Complete el diagnóstico y las notas clínicas de la consulta actual.
-    </p>
-
     <form method="post" action="{% url 'registrar_consulta' paciente.pk %}">
         {% csrf_token %}
 
         {% if consulta_form.non_field_errors %}
             <div class="alert alert-danger">
                 {% for error in consulta_form.non_field_errors %}
-                    {{ error }}
+                    <i class="bi bi-exclamation-circle-fill"></i> {{ error }}
                 {% endfor %}
             </div>
         {% endif %}
 
         <!-- SECCIÓN 1: DATOS DE LA CONSULTA -->
-        <h3 style="color: #084c61; border-bottom: 2px solid #f0f6f8; padding-bottom: 5px; margin-bottom: 20px;">1. Datos Clínicos</h3>
+        <h3 class="form-section-title">1. Datos Clínicos</h3>
         
         <div class="form-group">
             <label for="{{ consulta_form.motivo_consulta.id_for_label }}">Motivo de Consulta *</label>
             {{ consulta_form.motivo_consulta }}
             {% if consulta_form.motivo_consulta.errors %}
-                <span style="color: #c0392b; font-size: 0.85rem;">{% for error in consulta_form.motivo_consulta.errors %}{{ error }}{% endfor %}</span>
+                <span class="error-feedback"><i class="bi bi-exclamation-circle-fill"></i> {% for error in consulta_form.motivo_consulta.errors %}{{ error }}{% endfor %}</span>
             {% endif %}
         </div>
 
@@ -46,7 +34,7 @@
             <label for="{{ consulta_form.antecedentes.id_for_label }}">Antecedentes Médicos (Opcional)</label>
             {{ consulta_form.antecedentes }}
             {% if consulta_form.antecedentes.errors %}
-                <span style="color: #c0392b; font-size: 0.85rem;">{% for error in consulta_form.antecedentes.errors %}{{ error }}{% endfor %}</span>
+                <span class="error-feedback"><i class="bi bi-exclamation-circle-fill"></i> {% for error in consulta_form.antecedentes.errors %}{{ error }}{% endfor %}</span>
             {% endif %}
         </div>
 
@@ -54,7 +42,7 @@
             <label for="{{ consulta_form.diagnostico.id_for_label }}">Diagnóstico Médico *</label>
             {{ consulta_form.diagnostico }}
             {% if consulta_form.diagnostico.errors %}
-                <span style="color: #c0392b; font-size: 0.85rem;">{% for error in consulta_form.diagnostico.errors %}{{ error }}{% endfor %}</span>
+                <span class="error-feedback"><i class="bi bi-exclamation-circle-fill"></i> {% for error in consulta_form.diagnostico.errors %}{{ error }}{% endfor %}</span>
             {% endif %}
         </div>
 

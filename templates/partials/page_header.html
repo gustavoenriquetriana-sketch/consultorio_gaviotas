@@ -1,0 +1,51 @@
+{# Componente de cabecera de página unificado y navegación de breadcrumbs #}
+<div class="page-header-banner">
+    <nav class="breadcrumb-nav" aria-label="Navegación de migas de pan">
+        <ol class="breadcrumb-list">
+            <li class="breadcrumb-item">
+                <a href="{% url 'dashboard' %}"><i class="bi bi-house-door-fill"></i> Inicio</a>
+            </li>
+            {% if b1_label %}
+                {% if b1_url %}
+                    <li class="breadcrumb-item"><a href="{{ b1_url }}">{{ b1_label }}</a></li>
+                {% else %}
+                    <li class="breadcrumb-item active">{{ b1_label }}</li>
+                {% endif %}
+            {% endif %}
+            {% if b2_label %}
+                {% if b2_url %}
+                    <li class="breadcrumb-item"><a href="{{ b2_url }}">{{ b2_label }}</a></li>
+                {% else %}
+                    <li class="breadcrumb-item active">{{ b2_label }}</li>
+                {% endif %}
+            {% endif %}
+            {% if b3_label %}
+                {% if b3_url %}
+                    <li class="breadcrumb-item"><a href="{{ b3_url }}">{{ b3_label }}</a></li>
+                {% else %}
+                    <li class="breadcrumb-item active">{{ b3_label }}</li>
+                {% endif %}
+            {% endif %}
+        </ol>
+    </nav>
+
+    <div class="page-header-content">
+        <div>
+            {% if tag %}
+                <span class="page-header-tag">{{ tag }}</span>
+            {% endif %}
+            <h1 class="page-title">{{ title }}</h1>
+            {% if subtitle %}
+                <p class="page-subtitle">{{ subtitle }}</p>
+            {% endif %}
+        </div>
+
+        {% if action_url and action_label %}
+            <div class="page-header-action">
+                <a href="{{ action_url }}" class="btn {{ action_class|default:'btn-secondary' }}">
+                    {% if action_icon %}<i class="{{ action_icon }}"></i>{% endif %} {{ action_label }}
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>

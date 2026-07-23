@@ -3,15 +3,8 @@
 {% block title %}Las Gaviotas - Reporte de Consultas{% endblock %}
 
 {% block content %}
-<div style="margin-bottom: 20px;">
-    <a href="{% url 'menu_reportes' %}" class="btn" style="background-color: #95a5a6; width: auto; display: inline-block;"><i class="bi bi-arrow-left"></i> Volver al Menú</a>
-</div>
-
-<div class="welcome-section" style="border-left-color: #008080; margin-bottom: 25px;">
-    <span style="font-size: 0.8rem; text-transform: uppercase; color: #7f8c8d; font-weight: bold; letter-spacing: 0.5px;">Reporte Clínico</span>
-    <h2 style="margin-top: 5px; margin-bottom: 5px; color: #008080;">Historial de Consultas Médicas</h2>
-    <p>Consulte la carga y el historial de atenciones clínicas en el consultorio. Rango de fechas obligatorio.</p>
-</div>
+{% url 'menu_reportes' as reportes_url %}
+{% include 'partials/page_header.html' with title="Historial de Consultas Médicas" subtitle="Consulte la carga y el historial de atenciones clínicas en el consultorio." tag="Reportes Clínicos" b1_label="Reportes" b1_url=reportes_url b2_label="Consultas Médicas" action_url=reportes_url action_label="Volver al Menú" action_icon="bi bi-arrow-left" action_class="btn-outline" %}
 
 <!-- Formulario de Filtros -->
 <div class="search-card" style="margin-bottom: 30px;">

@@ -3,11 +3,7 @@
 {% block title %}Las Gaviotas - Reportes{% endblock %}
 
 {% block content %}
-<div class="welcome-section">
-    <span style="font-size: 0.8rem; text-transform: uppercase; color: #7f8c8d; font-weight: bold; letter-spacing: 0.5px;">Panel Administrativo</span>
-    <h2 style="margin-top: 5px; margin-bottom: 5px;">Reportes y Estadísticas de Gestión</h2>
-    <p>Consulte y exporte reportes en formato PDF con filtros personalizados para el control clínico e institucional.</p>
-</div>
+{% include 'partials/page_header.html' with title="Reportes y Estadísticas de Gestión" subtitle="Consulte y exporte reportes en formato PDF con filtros personalizados para el control clínico." tag="Panel Administrativo" b1_label="Reportes" %}
 
 <!-- Grid de Opciones de Reporte -->
 <div class="dashboard-grid" style="margin-top: 20px;">

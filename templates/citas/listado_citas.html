@@ -3,15 +3,10 @@
 {% block title %}Las Gaviotas - Agenda de Citas{% endblock %}
 
 {% block content %}
+{% url 'buscar_pacientes' as buscar_url %}
+{% include 'partials/page_header.html' with title="Agenda General de Citas" subtitle="Consulte y gestione el flujo diario de citas programadas en el consultorio." tag="Citas Médicas" b1_label="Citas" b2_label="Agenda General" action_url=buscar_url action_label="Buscar Paciente para Agendar" action_icon="bi bi-search" %}
+
 <div class="search-card">
-    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 20px;">
-        <h2 style="margin-bottom: 0; color: #084c61;">Agenda General de Citas</h2>
-        <a href="{% url 'buscar_pacientes' %}" class="btn btn-secondary" style="width: auto;"><i class="bi bi-search" style="margin-right: 5px;"></i> Buscar Paciente para Agendar</a>
-    </div>
-    
-    <p style="color: #7f8c8d; margin-bottom: 25px; font-size: 0.95rem;">
-        Consulte y gestione el flujo diario de citas programadas en el consultorio.
-    </p>
 
     <!-- Filtros de Estado -->
     <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px;">
