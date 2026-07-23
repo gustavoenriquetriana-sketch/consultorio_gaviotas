@@ -4,13 +4,13 @@
 
 {% block content %}
 <div class="search-card">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;">
+    <div class="page-header" style="margin-bottom: 20px;">
         <h2 style="margin-bottom: 0;">Búsqueda de Pacientes</h2>
         {% if request.user.rol != 'MEDICO' %}
-            <a href="{% url 'registrar_paciente' %}" class="btn btn-secondary" style="width: auto; font-weight: 600;"><i class="bi bi-person-plus-fill" style="margin-right: 5px;"></i> Registrar Nuevo Paciente</a>
+            <a href="{% url 'registrar_paciente' %}" class="btn btn-secondary"><i class="bi bi-person-plus-fill"></i> Registrar Nuevo Paciente</a>
         {% endif %}
     </div>
-    <p style="color: #7f8c8d; margin-bottom: 20px; font-size: 0.95rem;">
+    <p class="subtitle">
         Complete uno o varios campos para buscar pacientes en el sistema.
     </p>
 
@@ -35,12 +35,12 @@
 
         <div style="margin-bottom: 20px; display: flex; align-items: center; gap: 8px;">
             <input type="checkbox" name="incluir_inactivos" id="id_incluir_inactivos" {% if incluir_inactivos %}checked{% endif %}>
-            <label for="id_incluir_inactivos" style="margin-bottom: 0; font-weight: 600; cursor: pointer; color: #34495e;">Incluir pacientes desactivados (inactivos)</label>
+            <label for="id_incluir_inactivos" style="margin-bottom: 0; font-weight: 600; cursor: pointer; color: var(--text-primary);">Incluir pacientes desactivados (inactivos)</label>
         </div>
 
         <div class="search-actions">
-            <a href="{% url 'buscar_pacientes' %}" class="btn" style="background-color: #95a5a6;"><i class="bi bi-x-circle" style="margin-right: 5px;"></i> Limpiar Filtros</a>
-            <button type="submit" class="btn btn-secondary"><i class="bi bi-search" style="margin-right: 5px;"></i> Buscar Paciente</button>
+            <a href="{% url 'buscar_pacientes' %}" class="btn btn-outline"><i class="bi bi-x-circle"></i> Limpiar Filtros</a>
+            <button type="submit" class="btn btn-secondary"><i class="bi bi-search"></i> Buscar Paciente</button>
         </div>
     </form>
 </div>

@@ -3,13 +3,13 @@
 {% block title %}Las Gaviotas - Registrar Paciente{% endblock %}
 
 {% block content %}
-<div style="margin-bottom: 20px;">
-    <a href="{% url 'buscar_pacientes' %}" class="btn" style="background-color: #95a5a6; width: auto; display: inline-block;"><i class="bi bi-arrow-left"></i> Volver a Búsqueda</a>
+<div class="page-header">
+    <a href="{% url 'buscar_pacientes' %}" class="btn btn-outline"><i class="bi bi-arrow-left"></i> Volver a Búsqueda</a>
 </div>
 
 <div class="search-card" style="max-width: 800px; margin: 0 auto;">
     <h2>Registrar Nuevo Paciente</h2>
-    <p style="color: #7f8c8d; margin-bottom: 25px; font-size: 0.95rem;">
+    <p class="subtitle">
         Complete los datos personales y de contacto para dar de alta al paciente en el sistema del consultorio.
     </p>
 
@@ -24,14 +24,14 @@
             </div>
         {% endif %}
 
-        <h3 style="color: #084c61; border-bottom: 2px solid #f0f6f8; padding-bottom: 5px; margin-bottom: 20px;">Datos Personales</h3>
+        <h3 class="form-section-title">Datos Personales</h3>
         
         <div class="search-grid">
             <div class="form-group">
                 <label for="{{ form.cedula.id_for_label }}">{{ form.cedula.label }} *</label>
                 {{ form.cedula }}
                 {% if form.cedula.errors %}
-                    <span style="color: #c0392b; font-size: 0.85rem;">{% for error in form.cedula.errors %}{{ error }}{% endfor %}</span>
+                    <span class="error-feedback">{% for error in form.cedula.errors %}{{ error }}{% endfor %}</span>
                 {% endif %}
             </div>
 
@@ -39,7 +39,7 @@
                 <label for="{{ form.nombres.id_for_label }}">{{ form.nombres.label }} *</label>
                 {{ form.nombres }}
                 {% if form.nombres.errors %}
-                    <span style="color: #c0392b; font-size: 0.85rem;">{% for error in form.nombres.errors %}{{ error }}{% endfor %}</span>
+                    <span class="error-feedback">{% for error in form.nombres.errors %}{{ error }}{% endfor %}</span>
                 {% endif %}
             </div>
 
@@ -47,7 +47,7 @@
                 <label for="{{ form.apellidos.id_for_label }}">{{ form.apellidos.label }} *</label>
                 {{ form.apellidos }}
                 {% if form.apellidos.errors %}
-                    <span style="color: #c0392b; font-size: 0.85rem;">{% for error in form.apellidos.errors %}{{ error }}{% endfor %}</span>
+                    <span class="error-feedback">{% for error in form.apellidos.errors %}{{ error }}{% endfor %}</span>
                 {% endif %}
             </div>
         </div>
@@ -57,7 +57,7 @@
                 <label for="{{ form.fecha_nacimiento.id_for_label }}">{{ form.fecha_nacimiento.label }} *</label>
                 {{ form.fecha_nacimiento }}
                 {% if form.fecha_nacimiento.errors %}
-                    <span style="color: #c0392b; font-size: 0.85rem;">{% for error in form.fecha_nacimiento.errors %}{{ error }}{% endfor %}</span>
+                    <span class="error-feedback">{% for error in form.fecha_nacimiento.errors %}{{ error }}{% endfor %}</span>
                 {% endif %}
             </div>
 
@@ -65,7 +65,7 @@
                 <label for="{{ form.sexo.id_for_label }}">{{ form.sexo.label }} *</label>
                 {{ form.sexo }}
                 {% if form.sexo.errors %}
-                    <span style="color: #c0392b; font-size: 0.85rem;">{% for error in form.sexo.errors %}{{ error }}{% endfor %}</span>
+                    <span class="error-feedback">{% for error in form.sexo.errors %}{{ error }}{% endfor %}</span>
                 {% endif %}
             </div>
 
@@ -73,7 +73,7 @@
                 <label for="{{ form.telefono.id_for_label }}">{{ form.telefono.label }} *</label>
                 {{ form.telefono }}
                 {% if form.telefono.errors %}
-                    <span style="color: #c0392b; font-size: 0.85rem;">{% for error in form.telefono.errors %}{{ error }}{% endfor %}</span>
+                    <span class="error-feedback">{% for error in form.telefono.errors %}{{ error }}{% endfor %}</span>
                 {% endif %}
             </div>
         </div>
@@ -82,7 +82,7 @@
             <label for="{{ form.correo_electronico.id_for_label }}">{{ form.correo_electronico.label }} (Opcional)</label>
             {{ form.correo_electronico }}
             {% if form.correo_electronico.errors %}
-                <span style="color: #c0392b; font-size: 0.85rem;">{% for error in form.correo_electronico.errors %}{{ error }}{% endfor %}</span>
+                <span class="error-feedback">{% for error in form.correo_electronico.errors %}{{ error }}{% endfor %}</span>
             {% endif %}
         </div>
 
@@ -90,18 +90,18 @@
             <label for="{{ form.direccion.id_for_label }}">{{ form.direccion.label }} *</label>
             {{ form.direccion }}
             {% if form.direccion.errors %}
-                <span style="color: #c0392b; font-size: 0.85rem;">{% for error in form.direccion.errors %}{{ error }}{% endfor %}</span>
+                <span class="error-feedback">{% for error in form.direccion.errors %}{{ error }}{% endfor %}</span>
             {% endif %}
         </div>
 
-        <h3 style="color: #084c61; border-bottom: 2px solid #f0f6f8; padding-bottom: 5px; margin-top: 30px; margin-bottom: 20px;">Contacto de Emergencia</h3>
+        <h3 class="form-section-title">Contacto de Emergencia</h3>
 
         <div class="search-grid">
             <div class="form-group">
                 <label for="{{ form.contacto_emergencia_nombre.id_for_label }}">{{ form.contacto_emergencia_nombre.label }}</label>
                 {{ form.contacto_emergencia_nombre }}
                 {% if form.contacto_emergencia_nombre.errors %}
-                    <span style="color: #c0392b; font-size: 0.85rem;">{% for error in form.contacto_emergencia_nombre.errors %}{{ error }}{% endfor %}</span>
+                    <span class="error-feedback">{% for error in form.contacto_emergencia_nombre.errors %}{{ error }}{% endfor %}</span>
                 {% endif %}
             </div>
 
@@ -109,13 +109,13 @@
                 <label for="{{ form.contacto_emergencia_telefono.id_for_label }}">{{ form.contacto_emergencia_telefono.label }}</label>
                 {{ form.contacto_emergencia_telefono }}
                 {% if form.contacto_emergencia_telefono.errors %}
-                    <span style="color: #c0392b; font-size: 0.85rem;">{% for error in form.contacto_emergencia_telefono.errors %}{{ error }}{% endfor %}</span>
+                    <span class="error-feedback">{% for error in form.contacto_emergencia_telefono.errors %}{{ error }}{% endfor %}</span>
                 {% endif %}
             </div>
         </div>
 
         <div class="search-actions" style="margin-top: 30px;">
-            <button type="submit" class="btn btn-secondary" style="width: auto; padding: 12px 35px;"><i class="bi bi-person-plus-fill" style="margin-right: 5px;"></i> Registrar Paciente</button>
+            <button type="submit" class="btn btn-secondary"><i class="bi bi-person-plus-fill"></i> Registrar Paciente</button>
         </div>
     </form>
 </div>

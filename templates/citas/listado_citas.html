@@ -14,17 +14,17 @@
     </p>
 
     <!-- Filtros de Estado -->
-    <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px;">
-        <a href="{% url 'listar_citas' %}" class="btn" style="width: auto; padding: 8px 16px; background-color: {% if not estado_filtro %}#084c61{% else %}#bdc3c7{% endif %}; color: white; font-size: 0.9rem;">
+    <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px;">
+        <a href="{% url 'listar_citas' %}" class="btn btn-sm {% if not estado_filtro %}btn-primary{% else %}btn-outline{% endif %}">
             Todas
         </a>
-        <a href="{% url 'listar_citas' %}?estado=PENDIENTE" class="btn" style="width: auto; padding: 8px 16px; background-color: {% if estado_filtro == 'PENDIENTE' %}#f39c12{% else %}#bdc3c7{% endif %}; color: white; font-size: 0.9rem;">
+        <a href="{% url 'listar_citas' %}?estado=PENDIENTE" class="btn btn-sm {% if estado_filtro == 'PENDIENTE' %}btn-primary{% else %}btn-outline{% endif %}">
             Pendientes
         </a>
-        <a href="{% url 'listar_citas' %}?estado=ATENDIDA" class="btn" style="width: auto; padding: 8px 16px; background-color: {% if estado_filtro == 'ATENDIDA' %}#27ae60{% else %}#bdc3c7{% endif %}; color: white; font-size: 0.9rem;">
+        <a href="{% url 'listar_citas' %}?estado=ATENDIDA" class="btn btn-sm {% if estado_filtro == 'ATENDIDA' %}btn-primary{% else %}btn-outline{% endif %}">
             Atendidas
         </a>
-        <a href="{% url 'listar_citas' %}?estado=CANCELADA" class="btn" style="width: auto; padding: 8px 16px; background-color: {% if estado_filtro == 'CANCELADA' %}#c0392b{% else %}#bdc3c7{% endif %}; color: white; font-size: 0.9rem;">
+        <a href="{% url 'listar_citas' %}?estado=CANCELADA" class="btn btn-sm {% if estado_filtro == 'CANCELADA' %}btn-primary{% else %}btn-outline{% endif %}">
             Canceladas
         </a>
     </div>

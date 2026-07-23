@@ -3,8 +3,8 @@
 {% block title %}Las Gaviotas - Ficha de {{ paciente.nombres }} {{ paciente.apellidos }}{% endblock %}
 
 {% block content %}
-<div style="margin-bottom: 20px;">
-    <a href="{% url 'buscar_pacientes' %}" class="btn" style="background-color: #95a5a6; width: auto; display: inline-block;"><i class="bi bi-arrow-left"></i> Volver a Búsqueda</a>
+<div class="page-header">
+    <a href="{% url 'buscar_pacientes' %}" class="btn btn-outline"><i class="bi bi-arrow-left"></i> Volver a Búsqueda</a>
 </div>
 
 <div class="patient-details-grid">
@@ -48,7 +48,7 @@
         </div>
 
         {% if paciente.contacto_emergencia_nombre %}
-        <div class="detail-row" style="background-color: #f8fafc; padding: 10px; border-radius: 6px;">
+        <div class="detail-row" style="background-color: var(--bg-surface-subtle); padding: 10px; border-radius: 6px;">
             <strong>Contacto de Emergencia</strong>
             <span>{{ paciente.contacto_emergencia_nombre }} ({% if paciente.contacto_emergencia_telefono %}{{ paciente.contacto_emergencia_telefono }}{% else %}Sin teléfono{% endif %})</span>
         </div>
@@ -56,14 +56,14 @@
         
         <div style="margin-top: 25px; display: flex; flex-direction: column; gap: 10px;">
             {% if request.user.rol == 'ADMINISTRADOR' or request.user.rol == 'RECEPCIONISTA' %}
-                <a href="{% url 'editar_paciente' paciente.pk %}" class="btn" style="background-color: #0077b6; font-size: 0.9rem;"><i class="bi bi-pencil-fill" style="margin-right: 5px;"></i> Editar Datos</a>
+                <a href="{% url 'editar_paciente' paciente.pk %}" class="btn btn-primary"><i class="bi bi-pencil-fill"></i> Editar Datos</a>
             {% endif %}
             {% if request.user.rol == 'ADMINISTRADOR' and paciente.activo %}
-                <a href="{% url 'desactivar_paciente' paciente.pk %}" class="btn" style="background-color: #c0392b; font-size: 0.9rem;"><i class="bi bi-person-x-fill" style="margin-right: 5px;"></i> Desactivar Paciente</a>
+                <a href="{% url 'desactivar_paciente' paciente.pk %}" class="btn btn-danger"><i class="bi bi-person-x-fill"></i> Desactivar Paciente</a>
             {% endif %}
             {% if not paciente.activo %}
-                <div style="background-color: #fadbd8; color: #c0392b; text-align: center; padding: 10px; border-radius: 6px; font-weight: bold; font-size: 0.9rem;">
-                    <i class="bi bi-exclamation-octagon-fill" style="margin-right: 5px;"></i> Paciente Desactivado
+                <div style="background-color: var(--color-danger-bg); color: var(--color-danger); text-align: center; padding: 10px; border-radius: 6px; font-weight: bold; font-size: 0.9rem;">
+                    <i class="bi bi-exclamation-octagon-fill"></i> Paciente Desactivado
                 </div>
             {% endif %}
         </div>
