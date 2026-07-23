@@ -51,46 +51,44 @@
 
 <!-- Tabla de Resultados en Pantalla -->
 {% if busqueda_realizada or pacientes %}
-<div class="table-responsive">
-    <h3>Previsualización del Reporte ({{ pacientes|length }} Pacientes)</h3>
-    <table>
-        <thead>
-            <tr>
-                <th>Cédula</th>
-                <th>Nombre Completo</th>
-                <th>Fecha de Nacimiento</th>
-                <th>Sexo</th>
-                <th>Teléfono</th>
-                <th>Fecha de Registro</th>
-                <th>Estado</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for p in pacientes %}
-                <tr>
-                    <td><strong>{{ p.cedula }}</strong></td>
-                    <td>{{ p.apellidos }}, {{ p.nombres }}</td>
-                    <td>{{ p.fecha_nacimiento|date:"d/m/Y" }}</td>
-                    <td>{{ p.get_sexo_display }}</td>
-                    <td>{{ p.telefono }}</td>
-                    <td>{{ p.fecha_registro|date:"d/m/Y h:i a" }}</td>
-                    <td>
-                        {% if p.activo %}
-                            <span class="role-badge" style="background-color: #27ae60; color: white;">Activo</span>
-                        {% else %}
-                            <span class="role-badge" style="background-color: #c0392b; color: white;">Inactivo</span>
-                        {% endif %}
-                    </td>
-                </tr>
-            {% empty %}
-                <tr>
-                    <td colspan="7" style="text-align: center; padding: 30px; color: #7f8c8d;">
-                        No se encontraron pacientes registrados bajo los filtros seleccionados.
-                    </td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
+    {% if pacientes %}
+        <div class="table-responsive">
+            <h3>Previsualización del Reporte ({{ pacientes|length }} Pacientes)</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Cédula</th>
+                        <th>Nombre Completo</th>
+                        <th>Fecha de Nacimiento</th>
+                        <th>Sexo</th>
+                        <th>Teléfono</th>
+                        <th>Fecha de Registro</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for p in pacientes %}
+                        <tr>
+                            <td><strong>{{ p.cedula }}</strong></td>
+                            <td>{{ p.apellidos }}, {{ p.nombres }}</td>
+                            <td>{{ p.fecha_nacimiento|date:"d/m/Y" }}</td>
+                            <td>{{ p.get_sexo_display }}</td>
+                            <td>{{ p.telefono }}</td>
+                            <td>{{ p.fecha_registro|date:"d/m/Y h:i a" }}</td>
+                            <td>
+                                {% if p.activo %}
+                                    <span class="role-badge" style="background-color: #27ae60; color: white;">Activo</span>
+                                {% else %}
+                                    <span class="role-badge" style="background-color: #c0392b; color: white;">Inactivo</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        {% include 'partials/empty_state.html' with icon="bi-people-fill" title="Sin pacientes coincidentes" message="No se encontraron registros de pacientes bajo los filtros seleccionados." %}
+    {% endif %}
 {% endif %}
 {% endblock %}

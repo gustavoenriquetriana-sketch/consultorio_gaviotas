@@ -79,17 +79,20 @@
             </tbody>
         </table>
     {% else %}
-        <div style="padding: 30px; color: #7f8c8d; text-align: center;">
-            {% if busqueda_realizada %}
-                <p>No se encontraron pacientes que coincidan con los criterios de búsqueda introducidos.</p>
-                {% if request.user.rol != 'MEDICO' %}
-                    <br>
-                    <a href="{% url 'registrar_paciente' %}" class="btn btn-secondary" style="width: auto; display: inline-block;"><i class="bi bi-person-plus-fill" style="margin-right: 5px;"></i> Registrar Nuevo Paciente</a>
-                {% endif %}
+        {% url 'registrar_paciente' as reg_url %}
+        {% if busqueda_realizada %}
+            {% if request.user.rol != 'MEDICO' %}
+                {% include 'partials/empty_state.html' with icon="bi-person-x-fill" title="Sin pacientes coincidentes" message="No se encontraron registros de pacientes con los criterios introducidos." action_url=reg_url action_label="Registrar Nuevo Paciente" action_icon="bi bi-person-plus-fill" %}
             {% else %}
-                <p>No hay pacientes registrados en el sistema actualmente.</p>
+                {% include 'partials/empty_state.html' with icon="bi-person-x-fill" title="Sin pacientes coincidentes" message="No se encontraron registros de pacientes con los criterios introducidos." %}
             {% endif %}
-        </div>
+        {% else %}
+            {% if request.user.rol != 'MEDICO' %}
+                {% include 'partials/empty_state.html' with icon="bi-people" title="No hay pacientes registrados" message="El padrón de pacientes está vacío. Comience registrando su primer paciente." action_url=reg_url action_label="Registrar Nuevo Paciente" action_icon="bi bi-person-plus-fill" %}
+            {% else %}
+                {% include 'partials/empty_state.html' with icon="bi-people" title="No hay pacientes registrados" message="El padrón de pacientes está vacío actualmente." %}
+            {% endif %}
+        {% endif %}
     {% endif %}
 </div>
 {% endblock %}

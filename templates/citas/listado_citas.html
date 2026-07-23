@@ -93,9 +93,7 @@
             </tbody>
         </table>
     {% else %}
-        <p style="padding: 30px; color: #7f8c8d; text-align: center;">
-            No hay citas registradas en la agenda {% if estado_filtro %}con estado <strong>{{ estado_filtro|lower }}</strong>{% endif %}.
-        </p>
+        {% include 'partials/empty_state.html' with icon="bi-calendar2-week" title="No hay citas en este estado" message="No se encontraron citas médicas registradas en la agenda con el filtro seleccionado." %}
     {% endif %}
 </div>
 {% endblock %}

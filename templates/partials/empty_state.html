@@ -1,0 +1,17 @@
+{# Componente reutilizable para Estados Vacíos (Empty States) #}
+<div class="empty-state-container">
+    <div class="empty-state-icon-wrapper">
+        <i class="{{ icon|default:'bi-inbox-fill' }}"></i>
+    </div>
+    <h4 class="empty-state-title">{{ title|default:"Sin registros disponibles" }}</h4>
+    {% if message %}
+        <p class="empty-state-message">{{ message }}</p>
+    {% endif %}
+    {% if action_url and action_label %}
+        <div class="empty-state-action">
+            <a href="{{ action_url }}" class="btn {{ action_class|default:'btn-secondary' }}">
+                {% if action_icon %}<i class="{{ action_icon }}"></i>{% endif %} {{ action_label }}
+            </a>
+        </div>
+    {% endif %}
+</div>

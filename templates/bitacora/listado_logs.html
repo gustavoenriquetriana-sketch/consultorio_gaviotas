@@ -57,6 +57,7 @@
 </div>
 
 <!-- Tabla de Registros de Actividad -->
+{% if page_obj %}
 <div class="table-responsive">
     <table style="font-size: 0.9rem;">
         <thead>
@@ -90,16 +91,13 @@
                 </td>
                 <td style="line-height: 1.4; color: #2c3e50;">{{ log.descripcion }}</td>
             </tr>
-            {% empty %}
-            <tr>
-                <td colspan="5" style="text-align: center; padding: 40px; color: #7f8c8d;">
-                    No se encontraron registros de actividad en la bitácora bajo los filtros seleccionados.
-                </td>
-            </tr>
             {% endfor %}
         </tbody>
     </table>
 </div>
+{% else %}
+    {% include 'partials/empty_state.html' with icon="bi-shield-slash" title="Sin registros de auditoría" message="No se encontraron eventos o actividades registradas en la bitácora bajo los filtros seleccionados." %}
+{% endif %}
 
 <!-- Controles de Paginación -->
 {% if page_obj.has_other_pages %}

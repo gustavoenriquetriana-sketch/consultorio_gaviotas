@@ -122,9 +122,12 @@
                 </div>
             {% endfor %}
         {% else %}
-            <div class="history-card">
-                <p style="color: #7f8c8d; text-align: center;">Este paciente aún no posee registros en su historial clínico.</p>
-            </div>
+            {% url 'registrar_consulta' paciente.pk as reg_cons_url %}
+            {% if request.user.rol == 'ADMINISTRADOR' or request.user.rol == 'MEDICO' %}
+                {% include 'partials/empty_state.html' with icon="bi-file-earmark-medical" title="Sin consultas registradas" message="Este paciente aún no posee atenciones ni notas registradas en su historial clínico." action_url=reg_cons_url action_label="Registrar Consulta" action_icon="bi bi-file-earmark-plus" %}
+            {% else %}
+                {% include 'partials/empty_state.html' with icon="bi-file-earmark-medical" title="Sin consultas registradas" message="Este paciente aún no posee atenciones ni notas registradas en su historial clínico." %}
+            {% endif %}
         {% endif %}
 
         <!-- Sección de Citas Médicas Agendadas -->
@@ -189,9 +192,12 @@
                 </table>
             </div>
         {% else %}
-            <div class="history-card">
-                <p style="color: #7f8c8d; text-align: center;">No hay citas registradas para este paciente.</p>
-            </div>
+            {% url 'agendar_cita' paciente.pk as agendar_url %}
+            {% if request.user.rol != 'MEDICO' %}
+                {% include 'partials/empty_state.html' with icon="bi-calendar-x" title="Sin citas agendadas" message="No se han programado citas médicas para este paciente." action_url=agendar_url action_label="Agendar Cita" action_icon="bi bi-calendar-plus" %}
+            {% else %}
+                {% include 'partials/empty_state.html' with icon="bi-calendar-x" title="Sin citas agendadas" message="No se han programado citas médicas para este paciente." %}
+            {% endif %}
         {% endif %}
     </div>
 </div>

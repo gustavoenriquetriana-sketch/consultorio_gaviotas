@@ -1313,3 +1313,46 @@ textarea.is-invalid {
     align-items: center;
     gap: 5px;
 }
+
+/* --- FASE 3: COMPONENTE EMPTY STATES --- */
+.empty-state-container {
+    text-align: center;
+    padding: 44px 24px;
+    background-color: var(--bg-card);
+    border: 2px dashed var(--border-color);
+    border-radius: var(--radius-lg);
+    margin: 20px 0;
+}
+
+.empty-state-icon-wrapper {
+    width: 68px;
+    height: 68px;
+    background-color: rgba(8, 76, 97, 0.06);
+    color: var(--color-primary);
+    border-radius: var(--radius-full);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    margin-bottom: 16px;
+}
+
+.empty-state-title {
+    color: var(--color-primary-dark);
+    font-size: var(--font-lg);
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+.empty-state-message {
+    color: var(--text-muted);
+    font-size: var(--font-sm);
+    max-width: 480px;
+    margin: 0 auto 16px auto;
+    line-height: 1.5;
+}
+
+.empty-state-action {
+    margin-top: 12px;
+}
+

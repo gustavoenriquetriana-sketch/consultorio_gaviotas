@@ -51,39 +51,37 @@
 
 <!-- Tabla de Resultados en Pantalla -->
 {% if busqueda_realizada and rango_valido %}
-<div class="table-responsive">
-    <h3>Previsualización del Reporte ({{ consultas|length }} Consultas)</h3>
-    <table>
-        <thead>
-            <tr>
-                <th style="width: 15%;">Fecha</th>
-                <th style="width: 25%;">Paciente</th>
-                <th style="width: 20%;">Médico Tratante</th>
-                <th style="width: 20%;">Motivo de Consulta</th>
-                <th style="width: 20%;">Diagnóstico</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for c in consultas %}
-                <tr>
-                    <td style="font-weight: bold;">{{ c.fecha_consulta|date:"d/m/Y h:i a" }}</td>
-                    <td>
-                        {{ c.paciente.apellidos }}, {{ c.paciente.nombres }}
-                        <br><small style="color: #7f8c8d;">C.I: {{ c.paciente.cedula }}</small>
-                    </td>
-                    <td>Dr(a). {{ c.medico.get_full_name|default:c.medico.username }}</td>
-                    <td>{{ c.motivo_consulta }}</td>
-                    <td>{{ c.diagnostico }}</td>
-                </tr>
-            {% empty %}
-                <tr>
-                    <td colspan="5" style="text-align: center; padding: 30px; color: #7f8c8d;">
-                        No se registraron consultas médicas en el rango y médico seleccionado.
-                    </td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
+    {% if consultas %}
+        <div class="table-responsive">
+            <h3>Previsualización del Reporte ({{ consultas|length }} Consultas)</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 15%;">Fecha</th>
+                        <th style="width: 25%;">Paciente</th>
+                        <th style="width: 20%;">Médico Tratante</th>
+                        <th style="width: 20%;">Motivo de Consulta</th>
+                        <th style="width: 20%;">Diagnóstico</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for c in consultas %}
+                        <tr>
+                            <td style="font-weight: bold;">{{ c.fecha_consulta|date:"d/m/Y h:i a" }}</td>
+                            <td>
+                                {{ c.paciente.apellidos }}, {{ c.paciente.nombres }}
+                                <br><small style="color: #7f8c8d;">C.I: {{ c.paciente.cedula }}</small>
+                            </td>
+                            <td>Dr(a). {{ c.medico.get_full_name|default:c.medico.username }}</td>
+                            <td>{{ c.motivo_consulta }}</td>
+                            <td>{{ c.diagnostico }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        {% include 'partials/empty_state.html' with icon="bi-heart-pulse-fill" title="Sin consultas en este período" message="No se registraron consultas médicas bajo el rango de fechas y médico seleccionado." %}
+    {% endif %}
 {% endif %}
 {% endblock %}
